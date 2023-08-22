@@ -1,0 +1,111 @@
+name: personal-lib-actions
+on:
+  push:
+    # tags:
+      # Trigger the automation when the repo is tagged with a semantic version
+      # - 'v[0-9]+.[0-9]+.*'
+    branches:
+      - main
+  pull_request:
+    # It won't run the release job because relase only is trigged with a semantic version
+    branches:
+      - main
+jobs:
+  test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    # install go, clone repo, pass linting and testing
+    steps:
+      # Install go
+      - name: install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21.0
+
+      # close the source code for the current ref in the current working dir
+      # Note that the action is not named. For  commonly used actions,
+      # it is idiomatic to not provide a name
+      - uses: actions/checkout@v3
+
+      # Linting
+      - name: lint with golangci-lint
+        uses: golangci/golangci-lint-action@v3
+
+      # Test packages recursively in the repo
+      - name: run go test
+        run: go test ./...
+
+
+  release:
+    permissions:
+      contents: write
+    # depend on unit testing, ru test job before release job
+    needs: test
+    # only trigger this job if it has semantic version
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # Clone repo
+      - uses: actions/checkout@v3
+      # Creates a RELEASE_VERSION environment variable with the tag, such as v1.2.3
+      - name: Set RELEASE_VERSION ENV var
+        run: echo "RELEASE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV
+
+      # Install go v1.17 and it's tools
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.17.x
+
+      - name: install gox
+        run: go install github.com/mitchellh/gox@v1.0.1
+
+      - name: build cross-platform binaries
+        env:
+          PLATFORMS: darwin/amd64 darwin/arm64 linux/amd64 linux/arm64
+          VERSION_INJECT: github.com/PacktPublishing/Go-for-DevOps/chapter/9/pkg/tweeter.Version
+          OUTPUT_PATH_FORMAT: ./bin/${{ env.RELEASE_VERSION }}/{{.OS}}/{{.Arch}}/tweeter
+        run: |
+          # Inject the RELEASE_VERSION environment variable into a Go ldflag
+          # The  ldflag -X replaces the default value of the Version variable in the 
+          # github. com/devopsforgo/github-actions/pkg/tweeter package 
+          # with the  semantic version tag of the build.
+          gox -osarch="${PLATFORMS}" -ldflags "-X ${VERSION_INJECT}=${RELEASE_VERSION}" -output "${OUTPUT_PATH_FORMAT}"
+
+      - name: generate release notes
+        env:
+          # The GitHub secret is passed into the  GITHUB_TOKEN environment variable and is used by gh to authenticate. 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # call to the GitHub  API to generate the release notes for the given tag.
+          gh api -X POST 'repos/{owner}/{repo}/releases/generate-notes' \
+            -F commitish=${{ env.RELEASE_VERSION }} \
+            -F tag_name=${{ env.RELEASE_VERSION }} \
+            > tmp-release-notes.json
+
+      - name: gzip the bins
+        env:
+          OUT_BASE: ./bin/${{ env.RELEASE_VERSION }}
+        run: |
+          tar -czvf "${OUT_BASE}/darwin/amd64/tweeter_darwin_amd64.tar.gz" -C "${OUT_BASE}/darwin/amd64" tweeter
+          tar -czvf "${OUT_BASE}/darwin/arm64/tweeter_darwin_arm64.tar.gz" -C "${OUT_BASE}/darwin/arm64" tweeter
+          tar -czvf "${OUT_BASE}/linux/amd64/tweeter_linux_amd64.tar.gz" -C "${OUT_BASE}/linux/amd64" tweeter
+          tar -czvf "${OUT_BASE}/linux/arm64/tweeter_linux_arm64.tar.gz" -C "${OUT_BASE}/linux/arm64" tweeter
+
+      - name: create release
+        env:
+          OUT_BASE: ./bin/${{ env.RELEASE_VERSION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # gh release create creates a release and  uploads each of the files specifeid afetr the arguments.
+          # Each file uploaded becomes  an artifact on the release.
+          jq -r .body tmp-release-notes.json > tmp-release-notes.md
+          gh release create ${{ env.RELEASE_VERSION }} \
+            -t "$(jq -r .name tmp-release-notes.json)" \
+            -F tmp-release-notes.md \
+            "${OUT_BASE}/darwin/amd64/tweeter_darwin_amd64.tar.gz#tweeter_osx_amd64" \
+            "${OUT_BASE}/darwin/arm64/tweeter_darwin_arm64.tar.gz#tweeter_osx_arm64" \
+            "${OUT_BASE}/linux/amd64/tweeter_linux_amd64.tar.gz#tweeter_linux_amd64" \
+            "${OUT_BASE}/linux/arm64/tweeter_linux_arm64.tar.gz#tweeter_linux_arm64"

@@ -1,0 +1,29 @@
+services:
+  app:
+    container_name: personal_lib
+    build: .
+    ports:
+      - 8080:8080
+    restart: on-failure
+    network_mode: "host"
+    depends_on:
+      - postgresdb
+    volumes:
+      - .:/app
+    # env_file:
+    #   - .env
+
+  postgresdb:
+    image: postgres:alpine
+    container_name: postgres_container
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+
+    ports:
+      - "5441:5432"
+    volumes:
+      - /media/Maind/docker/volumes/personal_lib_db/_data:/var/lib/postgresql/data
+
+    restart: always
