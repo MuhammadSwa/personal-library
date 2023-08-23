@@ -1,0 +1,18 @@
+{{define "books_list"}}
+  {{with .Books}}
+    {{range .}}
+      <div class="book">
+      <p>{{.Title}}</p>
+      <p>{{.Author}}</p>
+      <p>-------</p>
+      </div>
+    {{end}}
+  {{end}}
+  {{if .IsPageNext}}
+  <button 
+    id="load-more-btn"
+    hx-get="/books/{{.NextPage}}"
+    hx-swap="outerHTML">
+  Load more </button>
+  {{end}}
+{{end}}

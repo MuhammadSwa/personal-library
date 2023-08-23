@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-func InitDatabase(dbUrl string) (*sql.DB, error) {
-	conn, err := sql.Open("postgres", dbUrl)
+func InitDatabase(dsn string) (*sql.DB, error) {
+	conn, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("Error opening database: %v", err)
 	}

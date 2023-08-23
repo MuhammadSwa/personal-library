@@ -2,6 +2,9 @@
 -- name: GetBookByID :one
 SELECT * FROM books WHERE id = $1;
 
+-- name: GetBooksLength :one
+SELECT COUNT(*) FROM books;
+
 -- name: CreateBook :one
 -- TODO: year_of_publishing better naming,
 -- number_of_pages?

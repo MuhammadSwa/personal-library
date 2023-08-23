@@ -1,0 +1,50 @@
+{{define "title"}}Create book{{end}}
+{{define "main"}}
+  <form method="POST" action="/create">
+    <label for="title">Title</label>
+    {{with .Form.FieldErrors.title}}
+      <label class='error'>{{.}}</label>
+    {{end}}
+    <input type="text" name="title" id="title" value="">
+
+    <label for="isbn" >ISBN*</label>
+    <input type="number" name="isbn" id="isbn">
+    <label for="author">Author*</label>
+    <input type="text" name="author" id="author" value="">
+    <label for="category">Category*</label>
+    <input type="text" name="category" id="category" value="">
+    <!-- TODO: add dropdown with categories -->
+    <label for="publisher">Publisher*</label>
+    <input type="text" name="publisher" id="publisher" value="">
+    <label for="yearOfPublishing">Year of publishing*</label>
+    <input type="number" name="yearOfPublishing" id="yearOfPublishing" value="">
+    <label for="url">Image*</label>
+    <input type="text" name="img" id="img" value="">
+    <label for="numberOfPages">Number of pages*</label>
+    <input type="number" name="numberOfPages" id="numberOfPages" value="">
+    <label for="personalRating">Personal rating*</label>
+    <input type="number" name="personalRating" id="personalRating" value="">
+    <label for="personalNotes">Personal notes*</label>
+    <input type="textarea" name="personalNotes" id="personalNotes" value="">
+    <label for="readStatus">Read status*</label>
+    <input type="checkbox" name="readStatus" id="readStatus" value="">
+    <label for="readDate">Read date*</label>
+    <input type="date" name="readDate" id="readDate" value="">
+    <input type="submit" value="Create">
+  </form>
+{{end}}
+
+	<!-- ID               int32 -->
+	<!-- Isbn             string -->
+	<!-- Title            string -->
+	<!-- Author           string -->
+	<!-- Category         string -->
+	<!-- Publisher        string -->
+	<!-- YearOfPublishing int32 -->
+	<!-- Img              string -->
+	<!-- NumberOfPages    int32 -->
+	<!-- PersonalRating   float6 -->
+
+	<!-- PersonalNotes    string -->
+	<!-- ReadStatus       bool -->
+	<!-- ReadDate         time.Time -->

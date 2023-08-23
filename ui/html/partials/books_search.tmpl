@@ -1,0 +1,8 @@
+{{define "books_search"}}
+  <label for="search">Search</label>
+  <input 
+   id="search-books" type="text" name="q"  placeholder="Search"
+   hx-get="/books" 
+   hx-trigger="keyup changed delay:500ms"
+  >
+{{end}}
