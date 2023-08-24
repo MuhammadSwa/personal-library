@@ -17,3 +17,10 @@ func InitDatabase(dsn string) (*sql.DB, error) {
 
 	return conn, nil
 }
+
+// <label for="search-by">Search by</label>
+// <select name="search-by" id="search-by">
+//   <option value="title">Title</option>
+//   <option value="author">Author</option>
+//   <option value="category">Category</option>
+// </select>

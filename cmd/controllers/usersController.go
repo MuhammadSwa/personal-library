@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -36,6 +37,7 @@ func (uc *UsersController) Login(w http.ResponseWriter, r *http.Request, ps http
 }
 
 func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	//TODO: parse login form
 	err := r.ParseForm()
 	if err != nil {
 		errs.WebClientErr(w, "Error parsing form")
@@ -49,16 +51,16 @@ func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps 
 		return
 	}
 
+	// TODO: validate login form
 	// validate form
 	form.CheckField(validator.NotBlank(form.Email), "email", "This field cannot be blank")
 	form.CheckField(validator.NotBlank(form.Password), "password", "This field cannot be blank")
 	form.CheckField(validator.ValidateEmail(form.Email), "email", "Email isn't valid")
 
+	data := templates.NewTemplateData(uc.session, r)
 	if !form.Valid() {
-		data := templates.NewTemplateData(uc.session, r)
 		data.Form = form
 		templates.Render(w, "login", data)
-		// c.templateCache.Render(w, http.StatusUnprocessableEntity, "login.tmpl", data)
 		return
 	}
 
@@ -68,7 +70,9 @@ func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps 
 	// Get user from db by email
 	user, err := uc.usersRepository.GetUserByEmail(r.Context(), form.Email)
 	if err != nil {
-		errs.WebClientErr(w, "Error getting user")
+		form.AddNonFieldError("Invalid login credentials")
+		data.Form = form
+		templates.Render(w, "login", data)
 		return
 	}
 
@@ -76,7 +80,9 @@ func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps 
 	// template for error
 	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(form.Password))
 	if err != nil {
-		errs.WebClientErr(w, "Password does not match")
+		form.AddNonFieldError("Invalid login credentials")
+		data.Form = form
+		templates.Render(w, "login", data)
 		return
 	}
 
@@ -139,6 +145,7 @@ func (uc *UsersController) SignupPost(w http.ResponseWriter, r *http.Request, ps
 
 	// create a new user
 	id, err := uc.usersRepository.CreateUser(r.Context(), form.Email, form.Password, form.Username)
+	fmt.Println("Id from signup", id)
 	if err != nil {
 		templateData := templates.NewTemplateData(uc.session, r)
 		templateData.Form = form

@@ -9,9 +9,8 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
-	controllers "github.com/muhammadswa/personal-library/cmd/api"
+	"github.com/muhammadswa/personal-library/cmd/controllers"
 	"github.com/muhammadswa/personal-library/cmd/repositories"
-	webControllers "github.com/muhammadswa/personal-library/cmd/web/controllers"
 	"github.com/muhammadswa/personal-library/internal/database"
 )
 
@@ -33,12 +32,12 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 
 	// api
 	booksRespository := repositories.NewBooksRepository(dbQueries)
-	bookController := controllers.NewBooksController(booksRespository)
+	bookController := controllers.NewBooksController(booksRespository, sessionManager)
 	// web
-	webBooksController := webControllers.NewBooksController(booksRespository, sessionManager)
+	webBooksController := controllers.NewBooksController(booksRespository, sessionManager)
 	usersRepository := repositories.NewUsersRepository(dbQueries)
-	usersController := webControllers.NewUsersController(usersRepository, sessionManager)
-	staticController := webControllers.NewStaticController(booksRespository, sessionManager)
+	usersController := controllers.NewUsersController(usersRepository, sessionManager)
+	staticController := controllers.NewStaticController(booksRespository, sessionManager)
 
 	middleware := NewMiddleware(sessionManager)
 	dynamicMiddleware := alice.New(sessionManager.LoadAndSave)
@@ -50,9 +49,9 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 
 	// api routes
 	// router.HandlerFunc()
-	router.GET("/v1/book/:isbn", bookController.GetBookByID)
-	router.POST("/v1/book", bookController.CreateBook)
-	router.POST("/v1/book/:isbn", bookController.CreateBookWithISBN)
+	// router.GET("/v1/book/:isbn", bookController.GetBookByID)
+	// router.POST("/v1/book", bookController.CreateBook)
+	// router.POST("/v1/book/:isbn", bookController.CreateBookWithISBN)
 
 	// web routes
 	router.GET("/", staticController.Home)
@@ -63,6 +62,7 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 	router.POST("/logout", usersController.LogoutPost)
 	//// protected routes
 	router.Handler(http.MethodGet, "/create", protectedRoutes.ThenFunc(webBooksController.CreateBook))
+	router.Handler(http.MethodGet, "/book/:id", protectedRoutes.ThenFunc(webBooksController.GetBookByID))
 	router.Handler(http.MethodGet, "/books/:page", protectedRoutes.ThenFunc(webBooksController.GetAllBooks))
 	router.Handler(http.MethodGet, "/books", protectedRoutes.ThenFunc(webBooksController.GetAllBooks))
 	router.Handler(http.MethodPost, "/create", protectedRoutes.ThenFunc(webBooksController.CreateBookPost))

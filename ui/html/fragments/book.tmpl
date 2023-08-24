@@ -1,0 +1,14 @@
+{{define "book"}}
+    <p>{{.Book.Isbn}}</p>
+    <h1>{{.Book.Title}}</h1>
+    <p>{{.Book.Author}}</p>
+    <p>{{.Book.Category}}</p>
+    <p>{{.Book.Publisher}}</p>
+    <p>{{.Book.YearOfPublishing}}</p>
+    <img src="{{.Book.Img}}" alt="{{.Book.Title}}">
+    <p>{{.Book.NumberOfPages}}</p>
+    <p>{{.Book.PersonalRating}}</p>
+    <p>{{.Book.PersonalNotes}}</p>
+    <p>{{.Book.ReadStatus}}</p>
+    <p>{{.Book.ReadDate}}</p>
+{{end}}

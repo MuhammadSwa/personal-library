@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -46,7 +47,16 @@ func DecodePostForm(r *http.Request, dst any) error {
 		return err
 	}
 
-	err = form.NewDecoder().Decode(&dst, r.PostForm)
+	decoder := form.NewDecoder()
+	decoder.RegisterCustomTypeFunc(func(vals []string) (interface{}, error) {
+		return time.Parse("2006-01-02", vals[0])
+	}, time.Time{})
+
+	if r.PostForm.Get("read_date") == "" {
+		r.PostForm.Set("read_date", time.Now().Format("2006-01-02"))
+	}
+	err = decoder.Decode(&dst, r.PostForm)
+
 	if err != nil {
 		// If we try to use an invalid target destination, the Decode() method
 		// will return an error with the type *form.InvalidDecoderError.We use
@@ -58,6 +68,7 @@ func DecodePostForm(r *http.Request, dst any) error {
 			panic(err)
 		}
 		// For all other errors, we return them as normal.
+		fmt.Println(err)
 		return err
 	}
 	return nil

@@ -15,25 +15,26 @@ import (
 	"github.com/muhammadswa/personal-library/internal/validator"
 )
 
-type webBooksController struct {
+type BooksController struct {
 	booksRespsitory *repositories.BooksRepository
 	session         *scs.SessionManager
 }
 
-func NewBooksController(booksRespository *repositories.BooksRepository, session *scs.SessionManager) *webBooksController {
-	return &webBooksController{
+func NewBooksController(booksRespository *repositories.BooksRepository, session *scs.SessionManager) *BooksController {
+	return &BooksController{
 		booksRespsitory: booksRespository,
 		session:         session,
 	}
 }
 
-func (bc *webBooksController) CreateBook(w http.ResponseWriter, r *http.Request) {
+func (bc *BooksController) CreateBook(w http.ResponseWriter, r *http.Request) {
 	templateData := templates.NewTemplateData(bc.session, r)
 	templateData.Form = &models.BookForm{}
 	templates.Render(w, "create_book", templateData)
 }
 
-func (bc *webBooksController) CreateBookPost(w http.ResponseWriter, r *http.Request) {
+func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request) {
+	// TODO: make a helper function? form(r)
 	// parse form
 	err := r.ParseForm()
 	if err != nil {
@@ -60,6 +61,7 @@ func (bc *webBooksController) CreateBookPost(w http.ResponseWriter, r *http.Requ
 	}
 
 	// check if isbn is valid
+	// TODO: look up for the isbn of the title?
 
 	userId := bc.session.GetInt32(r.Context(), "userId")
 	// for i := 0; i < 100; i++ {
@@ -99,17 +101,15 @@ func (bc *webBooksController) CreateBookPost(w http.ResponseWriter, r *http.Requ
 		errs.WebServerErr(w, "Error creating book")
 		return
 	}
-	fmt.Fprintln(w, id)
+	http.Redirect(w, r, fmt.Sprintf("/book/%d", id), http.StatusSeeOther)
 }
 
-func (bc *webBooksController) GetAllBooks(w http.ResponseWriter, r *http.Request) {
+func (bc *BooksController) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	pageStr := httprouter.ParamsFromContext(r.Context()).ByName("page")
-	// query := r.URL.Query().Get("q")
+	query := r.URL.Query().Get("q")
 	if pageStr == "" {
 		pageStr = "1"
 	}
-	// fmt.Println(query)
-	fmt.Println(pageStr)
 
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
@@ -138,20 +138,48 @@ func (bc *webBooksController) GetAllBooks(w http.ResponseWriter, r *http.Request
 		nextPage = false
 	}
 
-	books, err := bc.booksRespsitory.GetBooks(r.Context(), int(offset))
+	userId := bc.session.GetInt32(r.Context(), "userId")
+	books, err := bc.booksRespsitory.GetBooks(r.Context(), userId, query, int(offset))
 	if err != nil {
 		errs.WebServerErr(w, "err getting books")
 		return
+	}
+	if len(books) < 10 {
+		nextPage = false
 	}
 
 	data := templates.NewTemplateData(bc.session, r)
 	data.Books = &books
 	data.IsPageNext = nextPage
 	data.NextPage = page + 1
+	data.Query = query
 
-	if r.Header.Get("HX-Trigger") == "load-more-btn" {
+	hxTrigger := r.Header.Get("HX-Trigger")
+	if hxTrigger == "search-books" || hxTrigger == "load-more-btn" {
 		templates.RenderFragment(w, "books_list", data)
 		return
 	}
 	templates.Render(w, "books", data)
+}
+
+func (bc *BooksController) GetBookByID(w http.ResponseWriter, r *http.Request) {
+	// isbn := ps.ByName("isbn")
+	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		errs.WebClientErr(w, "Error parsing id")
+		return
+	}
+	book, err := bc.booksRespsitory.GetBookByID(r.Context(), id)
+	if err != nil {
+		errs.WebServerErr(w, "Error getting book")
+		return
+	}
+	data := templates.NewTemplateData(bc.session, r)
+	data.Book = book
+	if r.Header.Get("HX-Trigger") == "book_card" {
+		templates.RenderFragment(w, "book", data)
+		return
+	}
+	templates.Render(w, "book_details", data)
 }

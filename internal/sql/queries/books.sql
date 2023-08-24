@@ -24,4 +24,10 @@ RETURNING id;
 
 
 -- name: GetBooks :many
-SELECT * FROM books ORDER BY id DESC LIMIT 10 OFFSET $1;
+SELECT * FROM books where user_id=$1 ORDER BY id DESC LIMIT 10 OFFSET $2 ;
+
+-- name: GetBooksBy :many
+-- SELECT * FROM books ORDER BY id DESC LIMIT 10 OFFSET $1 where title LIKE $2;
+SELECT * from books WHERE user_id=$1 AND (to_tsvector('simple', title) @@ plainto_tsquery('simple', $2) OR $2 = '')
+ORDER BY id DESC LIMIT 10 OFFSET $3
+;

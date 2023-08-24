@@ -1,18 +1,21 @@
 {{define "books_list"}}
+<div id="books-list">
   {{with .Books}}
     {{range .}}
-      <div class="book">
-      <p>{{.Title}}</p>
+      <article id="book_card" class="book" hx-get="/book/{{.ID}}" hx-target="main" hx-push-url="true">
+        <header>{{.Title}}</header>
       <p>{{.Author}}</p>
-      <p>-------</p>
-      </div>
+      <footer>{{.PersonalNotes}}</footer>
+      </article>
     {{end}}
   {{end}}
   {{if .IsPageNext}}
   <button 
     id="load-more-btn"
     hx-get="/books/{{.NextPage}}"
-    hx-swap="outerHTML">
+    hx-swap="outerHTML"
+    >
   Load more </button>
   {{end}}
+</div>
 {{end}}

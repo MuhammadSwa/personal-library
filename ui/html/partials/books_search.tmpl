@@ -1,8 +1,19 @@
 {{define "books_search"}}
-  <label for="search">Search</label>
-  <input 
-   id="search-books" type="text" name="q"  placeholder="Search"
-   hx-get="/books" 
-   hx-trigger="keyup changed delay:500ms"
-  >
+
+  <form class="tool-bar" method="get" action="/books">
+    <input 
+       hx-include="closest form"
+       id="search-books" 
+       type="search" 
+       name="q"  
+       placeholder="Search"
+       value="{{.Query}}"
+       hx-get="/books" 
+       hx-push-url="true"
+       {{/*Chane only when hitting space*/}}
+       hx-trigger="change, keyup delay:400ms changed" 
+       hx-swap="outerHTML"
+       hx-target="#books-list"
+    >
+  </form>
 {{end}}

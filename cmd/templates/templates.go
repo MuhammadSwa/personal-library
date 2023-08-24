@@ -18,6 +18,7 @@ type templateData struct {
 	Form            any
 	IsPageNext      bool
 	NextPage        int
+	Query           string
 }
 
 func NewTemplateData(session *scs.SessionManager, r *http.Request) *templateData {
@@ -35,17 +36,20 @@ func Render(w http.ResponseWriter, page string, data any) {
 	files := []string{
 		"./ui/html/base.tmpl",
 		"./ui/html/fragments/books_list.tmpl",
+		"./ui/html/fragments/book.tmpl",
 		fmt.Sprintf("./ui/html/pages/%s.tmpl", page),
 	}
 	ts, err = ts.ParseFiles(files...)
 	// ts, err := template.ParseFiles(files...)
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
+		fmt.Println(err)
 		return
 	}
 	err = ts.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
+		fmt.Println(err)
 		return
 	}
 }
@@ -53,11 +57,13 @@ func Render(w http.ResponseWriter, page string, data any) {
 func RenderFragment(w http.ResponseWriter, page string, data any) {
 	ts, err := template.ParseFiles(fmt.Sprintf("./ui/html/fragments/%s.tmpl", page))
 	if err != nil {
+		fmt.Println(err)
 		errs.WebServerErr(w, "err parsing template")
 		return
 	}
-	err = ts.ExecuteTemplate(w, "books_list", data)
+	err = ts.ExecuteTemplate(w, page, data)
 	if err != nil {
+		fmt.Println(err)
 		errs.WebServerErr(w, "err parsing template")
 		return
 	}

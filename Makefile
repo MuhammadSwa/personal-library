@@ -35,10 +35,16 @@ migrations/new:
 	migrate create -seq -ext=.sql -dir=./internal/sql/schema ${DB_NAME}
 
 ## db/migrations/up: apply all up database migrations
-.PHONY: db/migrations/up
+.PHONY: migrations/up
 migrations/up: confirm
 	@echo 'Running up migrations...'
 	migrate -path ./internal/sql/schema -database ${DB_DSN} up
+
+## db/migrations/up: apply all down database migrations
+.PHONY: migrations/down
+migrations/down: confirm
+	@echo 'Running up migrations...'
+	migrate -path ./internal/sql/schema -database ${DB_DSN} down
 
 
 # ==================================================================================== #

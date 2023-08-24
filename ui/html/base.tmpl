@@ -1,17 +1,15 @@
 {{define "base"}}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <title>{{template "title" .}}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="/static/css/main.css" rel="stylesheet">
+    <link href="/static/css/pico.css" rel="stylesheet">
     <script src="/static/js/htmx.js"></script>
     
   </head>
-  <body hx-boost="true">
-    <!-- Back to top button -->
-    <a id="back-to-top-btn"></a>
+  <body hx-boost="true" class="container">
     <header>
   <h1><a href="/">Personal Library</a></h1>
     </header>

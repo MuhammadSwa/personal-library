@@ -93,11 +93,66 @@ func (q *Queries) GetBookByID(ctx context.Context, id int32) (Book, error) {
 }
 
 const getBooks = `-- name: GetBooks :many
-SELECT id, title, isbn, author, category, publisher, year_of_publishing, img, number_of_pages, personal_rating, personal_notes, read_status, read_date, user_id FROM books ORDER BY id DESC LIMIT 10 OFFSET $1
+SELECT id, title, isbn, author, category, publisher, year_of_publishing, img, number_of_pages, personal_rating, personal_notes, read_status, read_date, user_id FROM books where user_id=$1 ORDER BY id DESC LIMIT 10 OFFSET $2
 `
 
-func (q *Queries) GetBooks(ctx context.Context, offset int32) ([]Book, error) {
-	rows, err := q.db.QueryContext(ctx, getBooks, offset)
+type GetBooksParams struct {
+	UserID int32
+	Offset int32
+}
+
+func (q *Queries) GetBooks(ctx context.Context, arg GetBooksParams) ([]Book, error) {
+	rows, err := q.db.QueryContext(ctx, getBooks, arg.UserID, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Book
+	for rows.Next() {
+		var i Book
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Isbn,
+			&i.Author,
+			&i.Category,
+			&i.Publisher,
+			&i.YearOfPublishing,
+			&i.Img,
+			&i.NumberOfPages,
+			&i.PersonalRating,
+			&i.PersonalNotes,
+			&i.ReadStatus,
+			&i.ReadDate,
+			&i.UserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getBooksBy = `-- name: GetBooksBy :many
+SELECT id, title, isbn, author, category, publisher, year_of_publishing, img, number_of_pages, personal_rating, personal_notes, read_status, read_date, user_id from books WHERE user_id=$1 AND (to_tsvector('simple', title) @@ plainto_tsquery('simple', $2) OR $2 = '')
+ORDER BY id DESC LIMIT 10 OFFSET $3
+`
+
+type GetBooksByParams struct {
+	UserID         int32
+	PlaintoTsquery string
+	Offset         int32
+}
+
+// SELECT * FROM books ORDER BY id DESC LIMIT 10 OFFSET $1 where title LIKE $2;
+func (q *Queries) GetBooksBy(ctx context.Context, arg GetBooksByParams) ([]Book, error) {
+	rows, err := q.db.QueryContext(ctx, getBooksBy, arg.UserID, arg.PlaintoTsquery, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

@@ -1,35 +1,49 @@
 {{define "title"}}Create book{{end}}
 {{define "main"}}
   <form method="POST" action="/create">
-    <label for="title">Title</label>
-    {{with .Form.FieldErrors.title}}
-      <label class='error'>{{.}}</label>
-    {{end}}
-    <input type="text" name="title" id="title" value="">
+    <div class="grid">
+      <label for="title">Title*</label>
+      {{with .Form.FieldErrors.title}}
+        <label class='error'>{{.}}</label>
+      {{end}}
+      <input type="text" name="title" id="title" value="">
 
-    <label for="isbn" >ISBN*</label>
-    <input type="number" name="isbn" id="isbn">
-    <label for="author">Author*</label>
-    <input type="text" name="author" id="author" value="">
-    <label for="category">Category*</label>
-    <input type="text" name="category" id="category" value="">
-    <!-- TODO: add dropdown with categories -->
-    <label for="publisher">Publisher*</label>
-    <input type="text" name="publisher" id="publisher" value="">
-    <label for="yearOfPublishing">Year of publishing*</label>
-    <input type="number" name="yearOfPublishing" id="yearOfPublishing" value="">
-    <label for="url">Image*</label>
-    <input type="text" name="img" id="img" value="">
-    <label for="numberOfPages">Number of pages*</label>
-    <input type="number" name="numberOfPages" id="numberOfPages" value="">
-    <label for="personalRating">Personal rating*</label>
-    <input type="number" name="personalRating" id="personalRating" value="">
-    <label for="personalNotes">Personal notes*</label>
-    <input type="textarea" name="personalNotes" id="personalNotes" value="">
-    <label for="readStatus">Read status*</label>
-    <input type="checkbox" name="readStatus" id="readStatus" value="">
-    <label for="readDate">Read date*</label>
-    <input type="date" name="readDate" id="readDate" value="">
+      <label for="isbn" >ISBN</label>
+      <input type="number" name="isbn" id="isbn">
+    </div>
+    <div class="grid">
+      <label for="author">Author</label>
+      <input type="text" name="author" id="author" value="">
+
+      <label for="category">Category</label>
+      <select id="category" required name="category" id="category">
+        <option value="" disabled selected>Select a fruit…</option>
+        <option value="Horror" >Horror</option>
+      </select>
+    </div>
+    {{/* TODO: add dropdown with categories */}}
+    <div class="grid">
+      <label for="year_of_publishing">Year of publishing</label>
+      <input type="number" name="year_of_publishing" id="year_of_publishing" value="">
+      <label for="url">Image</label>
+      <input type="text" name="img" id="img" value="">
+    </div>
+    <div class="grid">
+      <label for="number_of_pages">Number of pages</label>
+      <input type="number" name="number_of_pages" id="number_of_pages" value="">
+      <label for="personal_rating">Personal rating</label>
+      <input type="number" name="personal_rating" id="personal_rating" value="">
+    </div>
+    <div class="grid">
+      <label for="read_status">Read status</label>
+      <input type="checkbox" name="read_status" id="read_status" value="">
+      <label for="read_date">Read date</label>
+      <input type="date" name="read_date" id="read_date" value="">
+    </div>
+
+    <label for="personal_notes">Personal notes</label>
+    <textarea rows="3" cols="70" name="personal_notes" id="personal_notes"></textarea>
+
     <input type="submit" value="Create">
   </form>
 {{end}}

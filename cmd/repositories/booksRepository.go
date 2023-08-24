@@ -34,11 +34,24 @@ func (br BooksRepository) CreateBook(ctx context.Context, book database.CreateBo
 	return int(id), nil
 }
 
-func (br BooksRepository) GetBooks(ctx context.Context, offset int) ([]database.Book, error) {
+func (br BooksRepository) GetBooks(ctx context.Context, userId int32, query string, offset int) ([]database.Book, error) {
 	if offset < 0 {
 		offset = 0
 	}
-	books, err := br.db.GetBooks(ctx, int32(offset))
+	var books []database.Book
+	var err error
+	if query == "" {
+		books, err = br.db.GetBooks(ctx, database.GetBooksParams{
+			Offset: int32(offset),
+			UserID: userId,
+		})
+	} else {
+		books, err = br.db.GetBooksBy(ctx, database.GetBooksByParams{
+			PlaintoTsquery: query,
+			Offset:         int32(offset),
+			UserID:         userId,
+		})
+	}
 	if err != nil {
 		return nil, err
 	}

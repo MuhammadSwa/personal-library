@@ -30,7 +30,7 @@ func (sc *StaticController) Home(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	offset := 0
-	books, err := sc.booksRepository.GetBooks(r.Context(), offset)
+	books, err := sc.booksRepository.GetBooks(r.Context(), 0, "", offset)
 	if err != nil {
 		errs.WebServerErr(w, "err getting books")
 		return
