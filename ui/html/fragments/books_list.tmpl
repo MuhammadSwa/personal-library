@@ -2,7 +2,7 @@
 <div id="books-list">
   {{with .Books}}
     {{range .}}
-      <article id="book_card" class="book" hx-get="/book/{{.ID}}" hx-target="main" hx-push-url="true">
+      <article id="book_card" class="book" hx-get="/book/{{.ID}}" hx-target="body" hx-push-url="true">
         <header>{{.Title}}</header>
       <p>{{.Author}}</p>
       <footer>{{.PersonalNotes}}</footer>

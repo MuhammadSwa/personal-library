@@ -1,4 +1,5 @@
-{{define "book"}}
+{{define "book_card"}}
+  <div>
     <p>{{.Book.Isbn}}</p>
     <h1>{{.Book.Title}}</h1>
     <p>{{.Book.Author}}</p>
@@ -11,8 +12,5 @@
     <p>{{.Book.PersonalNotes}}</p>
     <p>{{.Book.ReadStatus}}</p>
     <p>{{.Book.ReadDate}}</p>
-    <div class="grid">
-    <button hx-delete="/book/{{.Book.ID}}">Delete</button>
-    <button hx-delete="/book/edit/{{.Book.ID}}">Edit</button>
-    </div>
+  </div>
 {{end}}

@@ -199,3 +199,44 @@ func (q *Queries) GetBooksLength(ctx context.Context) (int64, error) {
 	err := row.Scan(&count)
 	return count, err
 }
+
+const updateBook = `-- name: UpdateBook :exec
+UPDATE books SET isbn=$2, title=$3, author=$4, category=$5, publisher=$6, year_of_publishing=$7,
+img=$8, number_of_pages=$9, personal_rating=$10, personal_notes=$11, read_status=$12, read_date=$13
+WHERE id=$1
+`
+
+type UpdateBookParams struct {
+	ID               int32
+	Isbn             string
+	Title            string
+	Author           string
+	Category         string
+	Publisher        string
+	YearOfPublishing int32
+	Img              string
+	NumberOfPages    int32
+	PersonalRating   float64
+	PersonalNotes    string
+	ReadStatus       bool
+	ReadDate         time.Time
+}
+
+func (q *Queries) UpdateBook(ctx context.Context, arg UpdateBookParams) error {
+	_, err := q.db.ExecContext(ctx, updateBook,
+		arg.ID,
+		arg.Isbn,
+		arg.Title,
+		arg.Author,
+		arg.Category,
+		arg.Publisher,
+		arg.YearOfPublishing,
+		arg.Img,
+		arg.NumberOfPages,
+		arg.PersonalRating,
+		arg.PersonalNotes,
+		arg.ReadStatus,
+		arg.ReadDate,
+	)
+	return err
+}

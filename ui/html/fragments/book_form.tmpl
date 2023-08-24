@@ -15,7 +15,7 @@
 
     <label for="category">Category</label>
     {{/* TODO: selected If category doesn't exist*/}}
-    <select id="category" required name="category" id="category" value="{{with .Book}}{{.Isbn}}{{end}}">
+    <select id="category" required name="category" value="{{with .Book}}{{.Isbn}}{{end}}">
       <option value="" disabled selected>Select a fruit…</option>
       <option value="Horror" >Horror</option>
     </select>
@@ -23,7 +23,7 @@
   <div class="grid">
     <label for="year_of_publishing">Year of publishing</label>
     <input type="number" name="year_of_publishing" id="year_of_publishing" value="{{with .Book}}{{.YearOfPublishing}}{{end}}">
-    <label for="url">Image</label>
+    <label for="img">Image</label>
     <input type="text" name="img" id="img" value="{{with .Book}}{{.Img}}{{end}}">
   </div>
   <div class="grid">

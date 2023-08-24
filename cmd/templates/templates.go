@@ -37,8 +37,7 @@ func Render(w http.ResponseWriter, page string, data any) {
 		"./ui/html/base.tmpl",
 		// TODO: fragments
 		"./ui/html/fragments/books_list.tmpl",
-		"./ui/html/fragments/book.tmpl",
-		"./ui/html/fragments/book.tmpl",
+		"./ui/html/fragments/book_card.tmpl",
 		"./ui/html/fragments/book_form.tmpl",
 		fmt.Sprintf("./ui/html/pages/%s.tmpl", page),
 	}

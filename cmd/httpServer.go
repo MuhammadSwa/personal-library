@@ -63,7 +63,9 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 	//// protected routes
 	router.Handler(http.MethodGet, "/create", protectedRoutes.ThenFunc(webBooksController.CreateBook))
 	router.Handler(http.MethodGet, "/book/:id", protectedRoutes.ThenFunc(webBooksController.GetBookByID))
+	router.Handler(http.MethodDelete, "/book/:id", protectedRoutes.ThenFunc(webBooksController.DeleteBook))
 	router.Handler(http.MethodGet, "/edit/book/:id", protectedRoutes.ThenFunc(webBooksController.EditBook))
+	router.Handler(http.MethodPut, "/edit/book/:id", protectedRoutes.ThenFunc(webBooksController.EditBookPut))
 	router.Handler(http.MethodGet, "/books/:page", protectedRoutes.ThenFunc(webBooksController.GetAllBooks))
 	router.Handler(http.MethodGet, "/books", protectedRoutes.ThenFunc(webBooksController.GetAllBooks))
 	router.Handler(http.MethodPost, "/create", protectedRoutes.ThenFunc(webBooksController.CreateBookPost))

@@ -193,10 +193,6 @@ func (bc *BooksController) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	}
 	data := templates.NewTemplateData(bc.session, r)
 	data.Book = book
-	if r.Header.Get("HX-Trigger") == "book_card" {
-		templates.RenderFragment(w, "book", data)
-		return
-	}
 	templates.Render(w, "book_details", data)
 }
 
@@ -216,4 +212,91 @@ func (bc *BooksController) EditBook(w http.ResponseWriter, r *http.Request) {
 	data.Book = book
 	data.Form = &models.BookForm{}
 	templates.Render(w, "edit_book", data)
+}
+
+func (bc *BooksController) EditBookPut(w http.ResponseWriter, r *http.Request) {
+	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		errs.WebClientErr(w, "Error parsing id")
+		return
+	}
+	err = r.ParseForm()
+	if err != nil {
+		errs.WebClientErr(w, "Error parsing form")
+		return
+	}
+	form := &models.BookForm{}
+
+	err = models.DecodePostForm(r, &form)
+	if err != nil {
+		errs.WebClientErr(w, "Error decoding form")
+		return
+	}
+
+	// validate form
+	form.CheckField((validator.NotBlank(form.Title)), "title", "This field can't be blank")
+
+	book := database.Book{
+		ID:               int32(id),
+		Isbn:             form.Isbn,
+		Title:            form.Title,
+		Author:           form.Author,
+		Category:         form.Category,
+		Publisher:        form.Publisher,
+		YearOfPublishing: form.YearOfPublishing,
+		Img:              form.Img,
+		NumberOfPages:    form.NumberOfPages,
+		PersonalRating:   form.PersonalRating,
+		PersonalNotes:    form.PersonalNotes,
+		ReadStatus:       form.ReadStatus,
+		ReadDate:         form.ReadDate,
+	}
+
+	if !form.Valid() {
+		data := templates.NewTemplateData(bc.session, r)
+		data.Book = &book
+		data.Form = form
+		templates.Render(w, "edit_book", data)
+		// c.templateCache.Render(w, http.StatusUnprocessableEntity, "login.tmpl", data)
+		return
+	}
+	// update the book
+	err = bc.booksRespsitory.UpdateBook(r.Context(), database.UpdateBookParams{
+		ID:               int32(id),
+		Isbn:             form.Isbn,
+		Title:            form.Title,
+		Author:           form.Author,
+		Category:         form.Category,
+		Publisher:        form.Publisher,
+		YearOfPublishing: form.YearOfPublishing,
+		Img:              form.Img,
+		NumberOfPages:    form.NumberOfPages,
+		PersonalRating:   form.PersonalRating,
+		PersonalNotes:    form.PersonalNotes,
+		ReadStatus:       form.ReadStatus,
+		ReadDate:         form.ReadDate,
+	})
+	// rediret to the book details
+	http.Redirect(w, r, fmt.Sprintf("/book/%d", id), http.StatusSeeOther)
+
+}
+
+func (bc *BooksController) DeleteBook(w http.ResponseWriter, r *http.Request) {
+	// idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
+	// id, err := strconv.Atoi(idStr)
+	//
+	//	if err != nil {
+	//		errs.WebClientErr(w, "Error parsing id")
+	//		return
+	//	}
+	//
+	// err = bc.booksRespsitory.DeleteBook(r.Context(), id)
+	//
+	//	if err != nil {
+	//		errs.WebServerErr(w, "Error deleting book")
+	//		return
+	//	}
+	//
+	// http.Redirect(w, r, "/books", http.StatusSeeOther)
 }

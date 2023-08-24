@@ -65,3 +65,11 @@ func (br BooksRepository) GetBooksLength(ctx context.Context) (int, error) {
 	}
 	return int(length), nil
 }
+
+func (br BooksRepository) UpdateBook(ctx context.Context, book database.UpdateBookParams) error {
+	err := br.db.UpdateBook(ctx, book)
+	if err != nil {
+		return err
+	}
+	return nil
+}

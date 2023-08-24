@@ -31,3 +31,8 @@ SELECT * FROM books where user_id=$1 ORDER BY id DESC LIMIT 10 OFFSET $2 ;
 SELECT * from books WHERE user_id=$1 AND (to_tsvector('simple', title) @@ plainto_tsquery('simple', $2) OR $2 = '')
 ORDER BY id DESC LIMIT 10 OFFSET $3
 ;
+
+-- name: UpdateBook :exec
+UPDATE books SET isbn=$2, title=$3, author=$4, category=$5, publisher=$6, year_of_publishing=$7,
+img=$8, number_of_pages=$9, personal_rating=$10, personal_notes=$11, read_status=$12, read_date=$13
+WHERE id=$1;
