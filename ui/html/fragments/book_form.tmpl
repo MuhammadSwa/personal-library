@@ -1,0 +1,44 @@
+{{define "book_form"}}
+  <div class="grid">
+    <label for="title">Title*</label>
+    {{with .Form.FieldErrors.title}}
+      <label class='error'>{{.}}</label>
+    {{end}}
+    <input type="text" name="title" id="title" value="{{with .Book}}{{.Title}}{{end}}">
+
+    <label for="isbn" >ISBN</label>
+    <input type="number" name="isbn" id="isbn" value="{{with .Book}}{{.Isbn}}{{end}}">
+  </div>
+  <div class="grid">
+    <label for="author">Author</label>
+    <input type="text" name="author" id="author" value="{{with .Book}}{{.Author}}{{end}}">
+
+    <label for="category">Category</label>
+    {{/* TODO: selected If category doesn't exist*/}}
+    <select id="category" required name="category" id="category" value="{{with .Book}}{{.Isbn}}{{end}}">
+      <option value="" disabled selected>Select a fruit…</option>
+      <option value="Horror" >Horror</option>
+    </select>
+  </div>
+  <div class="grid">
+    <label for="year_of_publishing">Year of publishing</label>
+    <input type="number" name="year_of_publishing" id="year_of_publishing" value="{{with .Book}}{{.YearOfPublishing}}{{end}}">
+    <label for="url">Image</label>
+    <input type="text" name="img" id="img" value="{{with .Book}}{{.Img}}{{end}}">
+  </div>
+  <div class="grid">
+    <label for="number_of_pages">Number of pages</label>
+    <input type="number" name="number_of_pages" id="number_of_pages" value="{{with .Book}}{{.NumberOfPages}}{{end}}">
+    <label for="personal_rating">Personal rating</label>
+    <input type="number" name="personal_rating" id="personal_rating" value="{{with .Book}}{{.PersonalRating}}{{end}}">
+  </div>
+  <div class="grid">
+    <label for="read_status">Read status</label>
+    <input type="checkbox" name="read_status" id="read_status" value="{{with .Book}}{{.ReadStatus}}{{end}}">
+    <label for="read_date">Read date</label>
+    <input type="date" name="read_date" id="read_date" value="{{with .Book}}{{.ReadDate}}{{end}}">
+  </div>
+
+  <label for="personal_notes">Personal notes</label>
+  <textarea rows="3" cols="70" name="personal_notes" id="personal_notes">{{with .Book}}{{.PersonalNotes}}{{end}}</textarea>
+{{end}}

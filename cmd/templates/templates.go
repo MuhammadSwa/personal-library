@@ -35,8 +35,11 @@ func Render(w http.ResponseWriter, page string, data any) {
 	}
 	files := []string{
 		"./ui/html/base.tmpl",
+		// TODO: fragments
 		"./ui/html/fragments/books_list.tmpl",
 		"./ui/html/fragments/book.tmpl",
+		"./ui/html/fragments/book.tmpl",
+		"./ui/html/fragments/book_form.tmpl",
 		fmt.Sprintf("./ui/html/pages/%s.tmpl", page),
 	}
 	ts, err = ts.ParseFiles(files...)

@@ -52,8 +52,24 @@ func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request
 	// validate form
 	form.CheckField((validator.NotBlank(form.Title)), "title", "This field can't be blank")
 
+	book := database.Book{
+		Isbn:             form.Isbn,
+		Title:            form.Title,
+		Author:           form.Author,
+		Category:         form.Category,
+		Publisher:        form.Publisher,
+		YearOfPublishing: form.YearOfPublishing,
+		Img:              form.Img,
+		NumberOfPages:    form.NumberOfPages,
+		PersonalRating:   form.PersonalRating,
+		PersonalNotes:    form.PersonalNotes,
+		ReadStatus:       form.ReadStatus,
+		ReadDate:         form.ReadDate,
+	}
+
 	if !form.Valid() {
 		data := templates.NewTemplateData(bc.session, r)
+		data.Book = &book
 		data.Form = form
 		templates.Render(w, "create_book", data)
 		// c.templateCache.Render(w, http.StatusUnprocessableEntity, "login.tmpl", data)
@@ -63,7 +79,6 @@ func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request
 	// check if isbn is valid
 	// TODO: look up for the isbn of the title?
 
-	userId := bc.session.GetInt32(r.Context(), "userId")
 	// for i := 0; i < 100; i++ {
 	// 	_, _ = bc.booksRespsitory.CreateBook(r.Context(), database.CreateBookParams{
 	// 		UserID:           userId,
@@ -81,6 +96,7 @@ func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request
 	// 		ReadDate:         form.ReadDate,
 	// 	})
 	// }
+	userId := bc.session.GetInt32(r.Context(), "userId")
 	id, err := bc.booksRespsitory.CreateBook(r.Context(), database.CreateBookParams{
 		UserID:           userId,
 		Isbn:             form.Isbn,
@@ -182,4 +198,22 @@ func (bc *BooksController) GetBookByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	templates.Render(w, "book_details", data)
+}
+
+func (bc *BooksController) EditBook(w http.ResponseWriter, r *http.Request) {
+	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		errs.WebClientErr(w, "Error parsing id")
+		return
+	}
+	book, err := bc.booksRespsitory.GetBookByID(r.Context(), id)
+	if err != nil {
+		errs.WebServerErr(w, "Error getting book")
+		return
+	}
+	data := templates.NewTemplateData(bc.session, r)
+	data.Book = book
+	data.Form = &models.BookForm{}
+	templates.Render(w, "edit_book", data)
 }
