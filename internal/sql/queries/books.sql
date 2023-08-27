@@ -36,3 +36,6 @@ ORDER BY id DESC LIMIT 10 OFFSET $3
 UPDATE books SET isbn=$2, title=$3, author=$4, category=$5, publisher=$6, year_of_publishing=$7,
 img=$8, number_of_pages=$9, personal_rating=$10, personal_notes=$11, read_status=$12, read_date=$13
 WHERE id=$1;
+
+-- name: DeleteBook :exec
+DELETE FROM books WHERE id=$1;

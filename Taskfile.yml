@@ -1,0 +1,21 @@
+version: 3
+tasks:
+  dev:
+    deps:
+      - watch
+      - dev:server
+  dev:server:
+    env:
+      DEV_MODE: true
+    cmds:
+      - gow -c -e=go,mod,tmpl run ./cmd/web
+  watch:
+    cmds:
+      - npx tailwindcss -i ./web/assets/css/main.css -o ./web/static/css/tailwind.css --watch
+  build:
+    cmds:
+      - npx tailwindcss -i ./web/assets/css/main.css -o ./web/static/css/tailwind.css 
+      - go build -o ./bin/personal-lib ./cmd/web
+  deploy:flyio:
+    cmds:
+      - flyctl deploy

@@ -22,7 +22,7 @@ RUN go install github.com/mitranim/gow@latest
 
 EXPOSE 8080
 
-ENTRYPOINT gow -c -e=go,mod,tmpl run ./cmd/main.go
+ENTRYPOINT gow -c -e=go,mod,tmpl run ./cmd/web
 # # Build the binary.
 # RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin/personal-lib ./cmd/web
 # CMD ["/bin/personal-lib"]

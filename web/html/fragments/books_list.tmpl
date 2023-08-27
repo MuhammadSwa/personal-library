@@ -2,10 +2,11 @@
 <div id="books-list">
   {{with .Books}}
     {{range .}}
+      {{/*I want title,img,rating*/}}
       <article id="book_card" class="book" hx-get="/book/{{.ID}}" hx-target="body" hx-push-url="true">
-        <header>{{.Title}}</header>
+        <h3>{{.Title}}</h3>
       <p>{{.Author}}</p>
-      <footer>{{.PersonalNotes}}</footer>
+      <p>{{.PersonalNotes}}</p>
       </article>
     {{end}}
   {{end}}

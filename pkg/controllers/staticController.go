@@ -5,9 +5,9 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/julienschmidt/httprouter"
-	errs "github.com/muhammadswa/personal-library/cmd/errors"
-	"github.com/muhammadswa/personal-library/cmd/repositories"
-	"github.com/muhammadswa/personal-library/cmd/templates"
+	errs "github.com/muhammadswa/personal-library/internal/errors"
+	"github.com/muhammadswa/personal-library/pkg/repositories"
+	"github.com/muhammadswa/personal-library/pkg/templates"
 )
 
 type StaticController struct {

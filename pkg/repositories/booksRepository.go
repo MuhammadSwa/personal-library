@@ -73,3 +73,11 @@ func (br BooksRepository) UpdateBook(ctx context.Context, book database.UpdateBo
 	}
 	return nil
 }
+
+func (br BooksRepository) DeleteBook(ctx context.Context, id int) error {
+	err := br.db.DeleteBook(ctx, int32(id))
+	if err != nil {
+		return err
+	}
+	return nil
+}

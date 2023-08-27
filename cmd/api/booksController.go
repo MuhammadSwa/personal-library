@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/muhammadswa/personal-library/cmd/repositories"
 	"github.com/muhammadswa/personal-library/internal/database"
+	"github.com/muhammadswa/personal-library/pkg/repositories"
 )
 
 type BooksController struct {

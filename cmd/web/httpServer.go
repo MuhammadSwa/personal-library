@@ -9,9 +9,9 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
-	"github.com/muhammadswa/personal-library/cmd/controllers"
-	"github.com/muhammadswa/personal-library/cmd/repositories"
 	"github.com/muhammadswa/personal-library/internal/database"
+	"github.com/muhammadswa/personal-library/pkg/controllers"
+	"github.com/muhammadswa/personal-library/pkg/repositories"
 )
 
 type httpServer struct {
@@ -45,7 +45,7 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 
 	router := httprouter.New()
 	// serve static files
-	router.ServeFiles("/static/*filepath", http.Dir("./ui/static/"))
+	router.ServeFiles("/static/*filepath", http.Dir("./web/static/"))
 
 	// api routes
 	// router.HandlerFunc()

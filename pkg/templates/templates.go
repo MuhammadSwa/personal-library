@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/alexedwards/scs/v2"
-	errs "github.com/muhammadswa/personal-library/cmd/errors"
 	"github.com/muhammadswa/personal-library/internal/database"
+	errs "github.com/muhammadswa/personal-library/internal/errors"
 )
 
 type templateData struct {
@@ -28,18 +28,18 @@ func NewTemplateData(session *scs.SessionManager, r *http.Request) *templateData
 }
 
 func Render(w http.ResponseWriter, page string, data any) {
-	ts, err := template.New(page).Funcs(functions).ParseGlob("./ui/html/partials/*.tmpl")
+	ts, err := template.New(page).Funcs(functions).ParseGlob("./web/html/partials/*.tmpl.html")
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
 		return
 	}
 	files := []string{
-		"./ui/html/base.tmpl",
+		"./web/html/base.tmpl.html",
 		// TODO: fragments
-		"./ui/html/fragments/books_list.tmpl",
-		"./ui/html/fragments/book_card.tmpl",
-		"./ui/html/fragments/book_form.tmpl",
-		fmt.Sprintf("./ui/html/pages/%s.tmpl", page),
+		"./web/html/fragments/books_list.tmpl",
+		"./web/html/fragments/book_details.tmpl",
+		"./web/html/fragments/book_form.tmpl",
+		fmt.Sprintf("./web/html/pages/%s.tmpl", page),
 	}
 	ts, err = ts.ParseFiles(files...)
 	// ts, err := template.ParseFiles(files...)
@@ -57,7 +57,7 @@ func Render(w http.ResponseWriter, page string, data any) {
 }
 
 func RenderFragment(w http.ResponseWriter, page string, data any) {
-	ts, err := template.ParseFiles(fmt.Sprintf("./ui/html/fragments/%s.tmpl", page))
+	ts, err := template.ParseFiles(fmt.Sprintf("./web/html/fragments/%s.tmpl", page))
 	if err != nil {
 		fmt.Println(err)
 		errs.WebServerErr(w, "err parsing template")

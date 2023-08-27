@@ -5,7 +5,7 @@ import (
 	"log"
 
 	_ "github.com/lib/pq"
-	"github.com/muhammadswa/personal-library/internal/config"
+	"github.com/muhammadswa/personal-library/config"
 	// "github.com/spf13/viper"
 	// "github.com/muhammadswa/personal-library/models"
 )
@@ -27,7 +27,6 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer conn.Close()
-
 	fmt.Println("Initializing http server...")
 	httpServer := InitHttpServer(conn, config.Port)
 	err = httpServer.Run()

@@ -7,12 +7,12 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/julienschmidt/httprouter"
-	errs "github.com/muhammadswa/personal-library/cmd/errors"
-	"github.com/muhammadswa/personal-library/cmd/models"
-	"github.com/muhammadswa/personal-library/cmd/repositories"
-	"github.com/muhammadswa/personal-library/cmd/templates"
 	"github.com/muhammadswa/personal-library/internal/database"
+	errs "github.com/muhammadswa/personal-library/internal/errors"
 	"github.com/muhammadswa/personal-library/internal/validator"
+	"github.com/muhammadswa/personal-library/pkg/models"
+	"github.com/muhammadswa/personal-library/pkg/repositories"
+	"github.com/muhammadswa/personal-library/pkg/templates"
 )
 
 type BooksController struct {
@@ -283,20 +283,20 @@ func (bc *BooksController) EditBookPut(w http.ResponseWriter, r *http.Request) {
 }
 
 func (bc *BooksController) DeleteBook(w http.ResponseWriter, r *http.Request) {
-	// idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
-	// id, err := strconv.Atoi(idStr)
-	//
-	//	if err != nil {
-	//		errs.WebClientErr(w, "Error parsing id")
-	//		return
-	//	}
-	//
-	// err = bc.booksRespsitory.DeleteBook(r.Context(), id)
-	//
-	//	if err != nil {
-	//		errs.WebServerErr(w, "Error deleting book")
-	//		return
-	//	}
-	//
-	// http.Redirect(w, r, "/books", http.StatusSeeOther)
+	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		errs.WebClientErr(w, "Error parsing id")
+		return
+	}
+
+	err = bc.booksRespsitory.DeleteBook(r.Context(), id)
+
+	if err != nil {
+		errs.WebServerErr(w, "Error deleting book")
+		return
+	}
+
+	http.Redirect(w, r, "/books", http.StatusSeeOther)
 }

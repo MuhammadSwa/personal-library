@@ -1,0 +1,19 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <title>{{template "title" .}}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link href="/static/css/tailwind.css" rel="stylesheet" /> -->
+    <link href="/static/css/pico.css" rel="stylesheet" />
+    <script src="/static/js/htmx.js"></script>
+  </head>
+
+  <body hx-boost="true" class="container">
+    <header>{{template "nav" .}}</header>
+    <main>{{template "main" .}}</main>
+    <footer>Made with 💕</footer>
+  </body>
+</html>
+{{end}}

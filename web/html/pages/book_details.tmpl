@@ -1,0 +1,11 @@
+{{define "title"}}{{.Book.Title}}{{end}}
+{{define "main"}}
+  <main>
+    {{template "book_details" .}}
+    <div class="grid" hx-push-url="true">
+      <button hx-delete="/book/{{.Book.ID}}" hx-target="body">Delete</button>
+      <button id="edit-book_btn" hx-get="/edit/book/{{.Book.ID}}" hx-target="main" hx-swap="outerHTML" hx-select="main" >Edit</button>
+    </div>
+  </main>
+
+{{end}}

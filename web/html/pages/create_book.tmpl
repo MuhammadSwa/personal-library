@@ -2,7 +2,7 @@
 {{define "main"}}
   <form method="POST" action="/create">
     {{template "book_form" .}}
-    <input type="submit" value="Create">
+    <input type="submit" value="Create" hx-post="/create" hx-target="main" hx-select="main" hx-swap="outerHTML" hx-push-url="true"/>
   </form>
 {{end}}
 

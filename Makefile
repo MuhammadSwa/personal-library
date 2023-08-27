@@ -21,7 +21,8 @@ confirm:
 ## run/api: run the cmd/api application
 .PHONY: run/web
 run/web:
-	@go run ./cmd/web
+	tailwindcss -i ./web/assets/css/main.css -o ./web/static/css/tailwind.css --watch &
+	gow -c -e=go,mod,tmpl run ./cmd/web
 
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
@@ -86,5 +87,5 @@ git_description = $(shell git describe --always --dirty --tags --long)
 .PHONY: build/api
 build/api:
 	@echo 'Building cmd/api...'
-	go build -ldflags=${linker_flags} -o=./bin/api ./cmd/api
-	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o=./bin/linux_amd64/api ./cmd/api
+	go build -ldflags=${linker_flags} -o=./bin/api ./cmd/web
+	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o=./bin/linux_amd64/api ./cmd/web
