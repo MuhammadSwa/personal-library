@@ -1,9 +1,9 @@
-{{define "title"}}{{.Book.ID}}{{end}}
+{{define "title"}}{{.Book.Title}}{{end}}
 {{define "main"}}
   <main>
   <form method="POST" action="/create">
     {{template "book_form" .}}
-    <input type="submit" value="Edit" hx-put="/edit/book/12" hx-target="body" hx-push-url="true" />
+    <input type="submit" value="Edit" hx-put="/edit/book/{{.Book.ID}}" hx-target="body" hx-push-url="true" />
   </form>
   </main>
 

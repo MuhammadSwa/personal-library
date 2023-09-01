@@ -11,7 +11,7 @@ tasks:
     env:
       DEV_MODE: true
     cmds:
-      - gow -c -e=go,mod,tmpl run ./cmd/web
+      - gow -e=go,mod,tmpl run ./cmd/web
       # - go run ./cmd/web
   # assets:
   #   deps: [js, css]

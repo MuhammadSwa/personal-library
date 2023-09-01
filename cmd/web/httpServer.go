@@ -15,10 +15,10 @@ import (
 )
 
 type httpServer struct {
-	booksController *controllers.BooksController
-	booksRepository *repositories.BooksRepository
-	router          *http.Handler
-	port            string
+	controllers *controllers.Controllers
+	repos       *repositories.Repositories
+	router      *http.Handler
+	port        string
 }
 
 func InitHttpServer(conn *sql.DB, port string) *httpServer {
@@ -30,54 +30,43 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 	// TODO: make an check box (sign in for 30 days) when logging in
 	sessionManager.Lifetime = 12 * time.Hour
 
-	// api
-	booksRespository := repositories.NewBooksRepository(dbQueries)
-	bookController := controllers.NewBooksController(booksRespository, sessionManager)
-	// web
-	webBooksController := controllers.NewBooksController(booksRespository, sessionManager)
-	usersRepository := repositories.NewUsersRepository(dbQueries)
-	usersController := controllers.NewUsersController(usersRepository, sessionManager)
-	staticController := controllers.NewStaticController(booksRespository, sessionManager)
+	repos := repositories.New(dbQueries)
+	controllers := controllers.New(repos, sessionManager)
 
 	middleware := NewMiddleware(sessionManager)
 	dynamicMiddleware := alice.New(sessionManager.LoadAndSave)
 	protectedRoutes := dynamicMiddleware.Append(middleware.authMiddleware)
+	isAuthenticated := dynamicMiddleware.Append(middleware.isAuthenticated)
 
 	router := httprouter.New()
 	// serve static files
 	router.ServeFiles("/static/*filepath", http.Dir("./web/static/"))
 
-	// api routes
-	// router.HandlerFunc()
-	// router.GET("/v1/book/:isbn", bookController.GetBookByID)
-	// router.POST("/v1/book", bookController.CreateBook)
-	// router.POST("/v1/book/:isbn", bookController.CreateBookWithISBN)
-
-	// web routes
-	router.GET("/", staticController.Home)
-	router.GET("/login", usersController.Login)
-	router.POST("/login", usersController.LoginPost)
-	router.GET("/signup", usersController.SignUp)
-	router.POST("/signup", usersController.SignupPost)
-	router.POST("/logout", usersController.LogoutPost)
+	// unprotected routes
+	router.Handler(http.MethodGet, "/login", isAuthenticated.ThenFunc(controllers.Login))
+	router.Handler(http.MethodGet, "/signup", isAuthenticated.ThenFunc(controllers.SignUp))
+	router.GET("/", controllers.Home)
+	router.POST("/login", controllers.LoginPost)
+	router.POST("/signup", controllers.SignupPost)
+	router.POST("/logout", controllers.LogoutPost)
 	//// protected routes
-	router.Handler(http.MethodGet, "/create", protectedRoutes.ThenFunc(webBooksController.CreateBook))
-	router.Handler(http.MethodGet, "/book/:id", protectedRoutes.ThenFunc(webBooksController.GetBookByID))
-	router.Handler(http.MethodDelete, "/book/:id", protectedRoutes.ThenFunc(webBooksController.DeleteBook))
-	router.Handler(http.MethodGet, "/edit/book/:id", protectedRoutes.ThenFunc(webBooksController.EditBook))
-	router.Handler(http.MethodPut, "/edit/book/:id", protectedRoutes.ThenFunc(webBooksController.EditBookPut))
-	router.Handler(http.MethodGet, "/books/:page", protectedRoutes.ThenFunc(webBooksController.GetAllBooks))
-	router.Handler(http.MethodGet, "/books", protectedRoutes.ThenFunc(webBooksController.GetAllBooks))
-	router.Handler(http.MethodPost, "/create", protectedRoutes.ThenFunc(webBooksController.CreateBookPost))
-	router.Handler(http.MethodGet, "/profile", protectedRoutes.ThenFunc(staticController.Profile))
+	router.Handler(http.MethodGet, "/create", protectedRoutes.ThenFunc(controllers.CreateBook))
+	router.Handler(http.MethodGet, "/book/:id", protectedRoutes.ThenFunc(controllers.GetBookByID))
+	router.Handler(http.MethodDelete, "/book/:id", protectedRoutes.ThenFunc(controllers.DeleteBook))
+	router.Handler(http.MethodGet, "/edit/book/:id", protectedRoutes.ThenFunc(controllers.EditBook))
+	router.Handler(http.MethodPut, "/edit/book/:id", protectedRoutes.ThenFunc(controllers.EditBookPut))
+	router.Handler(http.MethodGet, "/books/:page", protectedRoutes.ThenFunc(controllers.GetAllBooks))
+	router.Handler(http.MethodGet, "/books", protectedRoutes.ThenFunc(controllers.GetAllBooks))
+	router.Handler(http.MethodPost, "/create", protectedRoutes.ThenFunc(controllers.CreateBookPost))
+	router.Handler(http.MethodGet, "/profile", protectedRoutes.ThenFunc(controllers.Profile))
 
 	mainMiddleware := sessionManager.LoadAndSave(router)
 
 	return &httpServer{
-		booksController: bookController,
-		booksRepository: booksRespository,
-		router:          &mainMiddleware,
-		port:            port,
+		controllers: controllers,
+		repos:       repos,
+		router:      &mainMiddleware,
+		port:        port,
 	}
 }
 

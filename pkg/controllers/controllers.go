@@ -6,18 +6,16 @@ import (
 )
 
 type Controllers struct {
-	booksRespsitory *repositories.BooksRepository
-	usersRepository *repositories.UsersRepository
-	session         *scs.SessionManager
+	repos   *repositories.Repositories
+	session *scs.SessionManager
 }
 
-func New(booksRespo *repositories.BooksRepository, usersRepo *repositories.UsersRepository,
+func New(repos *repositories.Repositories,
 	session *scs.SessionManager) *Controllers {
 
 	return &Controllers{
-		usersRepository: usersRepo,
-		booksRespsitory: booksRespo,
-		session:         session,
+		repos:   repos,
+		session: session,
 	}
 
 }

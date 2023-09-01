@@ -5,35 +5,21 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/alexedwards/scs/v2"
 	"github.com/julienschmidt/httprouter"
 	"github.com/muhammadswa/personal-library/internal/database"
 	errs "github.com/muhammadswa/personal-library/internal/errors"
 	"github.com/muhammadswa/personal-library/internal/validator"
 	"github.com/muhammadswa/personal-library/pkg/models"
-	"github.com/muhammadswa/personal-library/pkg/repositories"
 	"github.com/muhammadswa/personal-library/pkg/templates"
 )
 
-type BooksController struct {
-	booksRespsitory *repositories.BooksRepository
-	session         *scs.SessionManager
-}
-
-func NewBooksController(booksRespository *repositories.BooksRepository, session *scs.SessionManager) *BooksController {
-	return &BooksController{
-		booksRespsitory: booksRespository,
-		session:         session,
-	}
-}
-
-func (bc *BooksController) CreateBook(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) CreateBook(w http.ResponseWriter, r *http.Request) {
 	templateData := templates.NewTemplateData(bc.session, r)
 	templateData.Form = &models.BookForm{}
 	templates.Render(w, "create_book", templateData)
 }
 
-func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 	// TODO: make a helper function? form(r)
 	// parse form
 	err := r.ParseForm()
@@ -80,7 +66,7 @@ func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request
 	// TODO: look up for the isbn of the title?
 
 	// for i := 0; i < 100; i++ {
-	// 	_, _ = bc.booksRespsitory.CreateBook(r.Context(), database.CreateBookParams{
+	// 	_, _ = bc.repos.CreateBook(r.Context(), database.CreateBookParams{
 	// 		UserID:           userId,
 	// 		Isbn:             form.Isbn,
 	// 		Title:            form.Title,
@@ -97,7 +83,7 @@ func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request
 	// 	})
 	// }
 	userId := bc.session.GetInt32(r.Context(), "userId")
-	id, err := bc.booksRespsitory.CreateBook(r.Context(), database.CreateBookParams{
+	id, err := bc.repos.CreateBook(r.Context(), database.CreateBookParams{
 		UserID:           userId,
 		Isbn:             form.Isbn,
 		Title:            form.Title,
@@ -120,7 +106,7 @@ func (bc *BooksController) CreateBookPost(w http.ResponseWriter, r *http.Request
 	http.Redirect(w, r, fmt.Sprintf("/book/%d", id), http.StatusSeeOther)
 }
 
-func (bc *BooksController) GetAllBooks(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	pageStr := httprouter.ParamsFromContext(r.Context()).ByName("page")
 	query := r.URL.Query().Get("q")
 	if pageStr == "" {
@@ -134,7 +120,7 @@ func (bc *BooksController) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: check maximum offset can be reached, sql rows?
 
-	booksLen, err := bc.booksRespsitory.GetBooksLength(r.Context())
+	booksLen, err := bc.repos.GetBooksLength(r.Context())
 	if err != nil {
 		errs.WebServerErr(w, "err getting books")
 		return
@@ -155,7 +141,7 @@ func (bc *BooksController) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userId := bc.session.GetInt32(r.Context(), "userId")
-	books, err := bc.booksRespsitory.GetBooks(r.Context(), userId, query, int(offset))
+	books, err := bc.repos.GetBooks(r.Context(), userId, query, int(offset))
 	if err != nil {
 		errs.WebServerErr(w, "err getting books")
 		return
@@ -178,7 +164,7 @@ func (bc *BooksController) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	templates.Render(w, "books", data)
 }
 
-func (bc *BooksController) GetBookByID(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	// isbn := ps.ByName("isbn")
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
@@ -186,7 +172,7 @@ func (bc *BooksController) GetBookByID(w http.ResponseWriter, r *http.Request) {
 		errs.WebClientErr(w, "Error parsing id")
 		return
 	}
-	book, err := bc.booksRespsitory.GetBookByID(r.Context(), id)
+	book, err := bc.repos.GetBookByID(r.Context(), id)
 	if err != nil {
 		errs.WebServerErr(w, "Error getting book")
 		return
@@ -196,14 +182,14 @@ func (bc *BooksController) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	templates.Render(w, "book_details", data)
 }
 
-func (bc *BooksController) EditBook(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) EditBook(w http.ResponseWriter, r *http.Request) {
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		errs.WebClientErr(w, "Error parsing id")
 		return
 	}
-	book, err := bc.booksRespsitory.GetBookByID(r.Context(), id)
+	book, err := bc.repos.GetBookByID(r.Context(), id)
 	if err != nil {
 		errs.WebServerErr(w, "Error getting book")
 		return
@@ -214,7 +200,7 @@ func (bc *BooksController) EditBook(w http.ResponseWriter, r *http.Request) {
 	templates.Render(w, "edit_book", data)
 }
 
-func (bc *BooksController) EditBookPut(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) EditBookPut(w http.ResponseWriter, r *http.Request) {
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -262,7 +248,7 @@ func (bc *BooksController) EditBookPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// update the book
-	err = bc.booksRespsitory.UpdateBook(r.Context(), database.UpdateBookParams{
+	err = bc.repos.UpdateBook(r.Context(), database.UpdateBookParams{
 		ID:               int32(id),
 		Isbn:             form.Isbn,
 		Title:            form.Title,
@@ -277,12 +263,16 @@ func (bc *BooksController) EditBookPut(w http.ResponseWriter, r *http.Request) {
 		ReadStatus:       form.ReadStatus,
 		ReadDate:         form.ReadDate,
 	})
+	if err != nil {
+		errs.WebServerErr(w, "Error updating book")
+		return
+	}
 	// rediret to the book details
 	http.Redirect(w, r, fmt.Sprintf("/book/%d", id), http.StatusSeeOther)
 
 }
 
-func (bc *BooksController) DeleteBook(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
 
@@ -291,7 +281,7 @@ func (bc *BooksController) DeleteBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = bc.booksRespsitory.DeleteBook(r.Context(), id)
+	err = bc.repos.DeleteBook(r.Context(), id)
 
 	if err != nil {
 		errs.WebServerErr(w, "Error deleting book")

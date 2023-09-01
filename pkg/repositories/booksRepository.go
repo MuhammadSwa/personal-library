@@ -7,17 +7,7 @@ import (
 	"github.com/muhammadswa/personal-library/internal/database"
 )
 
-type BooksRepository struct {
-	db *database.Queries
-}
-
-func NewBooksRepository(dbQueries *database.Queries) *BooksRepository {
-	return &BooksRepository{
-		db: dbQueries,
-	}
-}
-
-func (br BooksRepository) GetBookByID(ctx context.Context, id int) (*database.Book, error) {
+func (br *Repositories) GetBookByID(ctx context.Context, id int) (*database.Book, error) {
 	book, err := br.db.GetBookByID(ctx, int32(id))
 	fmt.Println(err)
 	if err != nil {
@@ -26,7 +16,7 @@ func (br BooksRepository) GetBookByID(ctx context.Context, id int) (*database.Bo
 	return &book, nil
 }
 
-func (br BooksRepository) CreateBook(ctx context.Context, book database.CreateBookParams) (int, error) {
+func (br *Repositories) CreateBook(ctx context.Context, book database.CreateBookParams) (int, error) {
 	id, err := br.db.CreateBook(ctx, book)
 	if err != nil {
 		return 0, err
@@ -34,7 +24,7 @@ func (br BooksRepository) CreateBook(ctx context.Context, book database.CreateBo
 	return int(id), nil
 }
 
-func (br BooksRepository) GetBooks(ctx context.Context, userId int32, query string, offset int) ([]database.Book, error) {
+func (br *Repositories) GetBooks(ctx context.Context, userId int32, query string, offset int) ([]database.Book, error) {
 	if offset < 0 {
 		offset = 0
 	}
@@ -58,7 +48,7 @@ func (br BooksRepository) GetBooks(ctx context.Context, userId int32, query stri
 	return books, nil
 }
 
-func (br BooksRepository) GetBooksLength(ctx context.Context) (int, error) {
+func (br *Repositories) GetBooksLength(ctx context.Context) (int, error) {
 	length, err := br.db.GetBooksLength(ctx)
 	if err != nil {
 		return 0, err
@@ -66,7 +56,7 @@ func (br BooksRepository) GetBooksLength(ctx context.Context) (int, error) {
 	return int(length), nil
 }
 
-func (br BooksRepository) UpdateBook(ctx context.Context, book database.UpdateBookParams) error {
+func (br *Repositories) UpdateBook(ctx context.Context, book database.UpdateBookParams) error {
 	err := br.db.UpdateBook(ctx, book)
 	if err != nil {
 		return err
@@ -74,7 +64,7 @@ func (br BooksRepository) UpdateBook(ctx context.Context, book database.UpdateBo
 	return nil
 }
 
-func (br BooksRepository) DeleteBook(ctx context.Context, id int) error {
+func (br *Repositories) DeleteBook(ctx context.Context, id int) error {
 	err := br.db.DeleteBook(ctx, int32(id))
 	if err != nil {
 		return err

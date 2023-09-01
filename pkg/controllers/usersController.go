@@ -5,38 +5,24 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/alexedwards/scs/v2"
 	"github.com/julienschmidt/httprouter"
 	"github.com/lib/pq"
 	errs "github.com/muhammadswa/personal-library/internal/errors"
 	"github.com/muhammadswa/personal-library/internal/validator"
 	"github.com/muhammadswa/personal-library/pkg/models"
-	"github.com/muhammadswa/personal-library/pkg/repositories"
 	"github.com/muhammadswa/personal-library/pkg/templates"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UsersController struct {
-	usersRepository *repositories.UsersRepository
-	session         *scs.SessionManager
-}
-
-func NewUsersController(usersRepository *repositories.UsersRepository, session *scs.SessionManager) *UsersController {
-	return &UsersController{
-		usersRepository: usersRepository,
-		session:         session,
-	}
-}
-
 // TODO hahdlers like home, about, contact, put them in a separate controller (staticController)
-func (uc *UsersController) Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) Login(w http.ResponseWriter, r *http.Request) {
 	templateData := templates.NewTemplateData(uc.session, r)
 	templateData.Form = &models.LoginForm{}
 	// uc.session.Put(r.Context(), "flash", "")
 	templates.Render(w, "login", templateData)
 }
 
-func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) LoginPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	//TODO: parse login form
 	err := r.ParseForm()
 	if err != nil {
@@ -68,7 +54,7 @@ func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps 
 	// TODO: Where to put validation
 	// TODO: Use repo layer instead of database directly
 	// Get user from db by email
-	user, err := uc.usersRepository.GetUserByEmail(r.Context(), form.Email)
+	user, err := uc.repos.GetUserByEmail(r.Context(), form.Email)
 	if err != nil {
 		form.AddNonFieldError("Invalid login credentials")
 		data.Form = form
@@ -99,13 +85,13 @@ func (uc *UsersController) LoginPost(w http.ResponseWriter, r *http.Request, ps 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (uc *UsersController) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) SignUp(w http.ResponseWriter, r *http.Request) {
 	data := templates.NewTemplateData(uc.session, r)
 	data.Form = &models.SignupForm{}
 	templates.Render(w, "signup", data)
 }
 
-func (uc *UsersController) SignupPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) SignupPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// parse form
 	err := r.ParseForm()
 	if err != nil {
@@ -144,7 +130,7 @@ func (uc *UsersController) SignupPost(w http.ResponseWriter, r *http.Request, ps
 	}
 
 	// create a new user
-	id, err := uc.usersRepository.CreateUser(r.Context(), form.Email, form.Password, form.Username)
+	id, err := uc.repos.CreateUser(r.Context(), form.Email, form.Password, form.Username)
 	fmt.Println("Id from signup", id)
 	if err != nil {
 		templateData := templates.NewTemplateData(uc.session, r)
@@ -175,7 +161,7 @@ func (uc *UsersController) SignupPost(w http.ResponseWriter, r *http.Request, ps
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (uc *UsersController) LogoutPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) LogoutPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	err := uc.session.RenewToken(r.Context())
 	if err != nil {
 		errs.WebServerErr(w, "Error renewing session token")
@@ -186,14 +172,14 @@ func (uc *UsersController) LogoutPost(w http.ResponseWriter, r *http.Request, ps
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (uc *UsersController) ForgotPassword(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) ForgotPassword(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
-func (uc *UsersController) ForgotPasswordPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) ForgotPasswordPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
-func (uc *UsersController) authenticateUser(r *http.Request, form models.LoginForm) error {
-	user, err := uc.usersRepository.GetUserByEmail(r.Context(), form.Email)
+func (uc *Controllers) authenticateUser(r *http.Request, form models.LoginForm) error {
+	user, err := uc.repos.GetUserByEmail(r.Context(), form.Email)
 	if err != nil {
 		return err
 	}

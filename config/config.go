@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -18,10 +17,6 @@ func InitConfig() (*Config, error) {
 		return nil, err
 	}
 	dbUrl := os.Getenv("DB_DSN")
-	if true {
-		dbUrl := "hello"
-		fmt.Println(dbUrl)
-	}
 	port := os.Getenv("PORT")
 	return &Config{
 		DSN:  dbUrl,
