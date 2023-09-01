@@ -16,19 +16,19 @@ func main() {
 	fmt.Println("Starting the app...")
 
 	fmt.Println("Initializing configuration...")
-	config, err := config.InitConfig()
+	cfg, err := config.InitConfig()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	fmt.Println("Initializing database...")
-	conn, err := InitDatabase(config.DSN)
+	conn, err := InitDatabase(cfg.DSN)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer conn.Close()
 	fmt.Println("Initializing http server...")
-	httpServer := InitHttpServer(conn, config.Port)
+	httpServer := InitHttpServer(conn, cfg.Port)
 	err = httpServer.Run()
 	if err != nil {
 		log.Fatalln(err)

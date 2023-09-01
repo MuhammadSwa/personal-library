@@ -2,19 +2,33 @@ version: 3
 tasks:
   dev:
     deps:
-      - watch
+      - tailwind
+      - css
+      - js
       - dev:server
+      # - watch-tailwind
   dev:server:
     env:
       DEV_MODE: true
     cmds:
       - gow -c -e=go,mod,tmpl run ./cmd/web
-  watch:
+      # - go run ./cmd/web
+  # assets:
+  #   deps: [js, css]
+  tailwind:
     cmds:
-      - npx tailwindcss -i ./web/assets/css/main.css -o ./web/static/css/tailwind.css --watch
+      - npx tailwindcss -i ./web/src/css/tailwind.css -o ./web/src/css/tailwind-out.css --watch
+  js:
+    cmds:
+      - npx esbuild ./web/src/js/main.js --bundle --outfile=./web/static/js/bundle.js --minify --watch
+  css:
+    # deps:
+    #   - tailwind
+    cmds:
+      - npx esbuild ./web/src/css/main.css --bundle --outfile=./web/static/css/bundle.css --minify --watch
   build:
     cmds:
-      - npx tailwindcss -i ./web/assets/css/main.css -o ./web/static/css/tailwind.css 
+      - npx tailwindcss -i ./web/assets/css/main.css -o ./web/static/css/tailwind.css
       - go build -o ./bin/personal-lib ./cmd/web
   deploy:flyio:
     cmds:
