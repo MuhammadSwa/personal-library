@@ -1,0 +1,40 @@
+{{define "books_list"}}
+<div
+  id="books-list"
+  class="max-w-4xl mx-auto p-6 grid sm:grid-cols-1 gap-6 mt-4 md:grid-cols-2"
+>
+  {{with .Books}} {{range .}} {{/*I want title,img,rating*/}}
+  <div
+    class="card w-96 bg-base-100 shadow-xl mx-auto"
+    id="book_card"
+    class="book"
+    hx-get="/book/{{.ID}}"
+    hx-target="body"
+    hx-push-url="true"
+  >
+    <figure>
+      <img src="/static/assets/library-svgrepo-com.svg" alt="{{.Title}}" />
+    </figure>
+    <div class="card-body">
+      <h2 class="card-title">
+        {{.Title}} {{with .Author}}
+        <div class="badge badge-secondary">{{.}}</div>
+        {{end}}
+      </h2>
+      <p>If a dog chews shoes whose shoes does he choose?</p>
+      <div class="card-actions justify-end">
+        <!-- TODO: make the user choose more than one category? -->
+        {{with .Category}}
+        <div class="badge badge-outline">{{.}}</div>
+        {{end}}
+        <div class="badge badge-outline">Products</div>
+      </div>
+    </div>
+  </div>
+  {{end}} {{end}} {{if .IsPageNext}}
+  <button id="load-more-btn" hx-get="/books/{{.NextPage}}" hx-swap="outerHTML">
+    Load more
+  </button>
+  {{end}}
+</div>
+{{end}}

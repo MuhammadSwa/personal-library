@@ -85,20 +85,20 @@ func (uc *Controllers) LoginPost(w http.ResponseWriter, r *http.Request, ps http
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (uc *Controllers) SignUp(w http.ResponseWriter, r *http.Request) {
+func (uc *Controllers) Register(w http.ResponseWriter, r *http.Request) {
 	data := templates.NewTemplateData(uc.session, r)
-	data.Form = &models.SignupForm{}
-	templates.Render(w, "signup", data)
+	data.Form = &models.RegisterForm{}
+	templates.Render(w, "register", data)
 }
 
-func (uc *Controllers) SignupPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (uc *Controllers) RegisterPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// parse form
 	err := r.ParseForm()
 	if err != nil {
 		errs.WebClientErr(w, "Error parsing form")
 		return
 	}
-	form := &models.SignupForm{}
+	form := &models.RegisterForm{}
 
 	err = models.DecodePostForm(r, &form)
 	if err != nil {
@@ -125,13 +125,13 @@ func (uc *Controllers) SignupPost(w http.ResponseWriter, r *http.Request, ps htt
 	if !form.Valid() {
 		data := templates.NewTemplateData(uc.session, r)
 		data.Form = form
-		templates.Render(w, "signup", data)
+		templates.Render(w, "register", data)
 		return
 	}
 
 	// create a new user
 	id, err := uc.repos.CreateUser(r.Context(), form.Email, form.Password, form.Username)
-	fmt.Println("Id from signup", id)
+	fmt.Println("Id from register", id)
 	if err != nil {
 		templateData := templates.NewTemplateData(uc.session, r)
 		templateData.Form = form
@@ -145,7 +145,7 @@ func (uc *Controllers) SignupPost(w http.ResponseWriter, r *http.Request, ps htt
 			form.AddFieldError("email", "Email already exists")
 		}
 
-		templates.Render(w, "signup", templateData)
+		templates.Render(w, "register", templateData)
 		return
 	}
 

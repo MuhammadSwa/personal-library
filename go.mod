@@ -13,4 +13,7 @@ require (
 	golang.org/x/crypto v0.12.0
 )
 
-require gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
+require (
+	github.com/Jeffail/gabs v1.4.0 // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
+)

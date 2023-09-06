@@ -44,10 +44,10 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 
 	// unprotected routes
 	router.Handler(http.MethodGet, "/login", isAuthenticated.ThenFunc(controllers.Login))
-	router.Handler(http.MethodGet, "/signup", isAuthenticated.ThenFunc(controllers.SignUp))
+	router.Handler(http.MethodGet, "/register", isAuthenticated.ThenFunc(controllers.Register))
 	router.GET("/", controllers.Home)
 	router.POST("/login", controllers.LoginPost)
-	router.POST("/signup", controllers.SignupPost)
+	router.POST("/register", controllers.RegisterPost)
 	router.POST("/logout", controllers.LogoutPost)
 	//// protected routes
 	router.Handler(http.MethodGet, "/create", protectedRoutes.ThenFunc(controllers.CreateBook))
@@ -58,6 +58,8 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 	router.Handler(http.MethodGet, "/books/:page", protectedRoutes.ThenFunc(controllers.GetAllBooks))
 	router.Handler(http.MethodGet, "/books", protectedRoutes.ThenFunc(controllers.GetAllBooks))
 	router.Handler(http.MethodPost, "/create", protectedRoutes.ThenFunc(controllers.CreateBookPost))
+	router.HandlerFunc(http.MethodGet, "/fetchByIsbn", controllers.FetchBookByIsbn)
+	// router.Handler(http.MethodPost, "/fetchByIsbn", protectedRoutes.ThenFunc(controllers.CreateBookWithISBN))
 	router.Handler(http.MethodGet, "/profile", protectedRoutes.ThenFunc(controllers.Profile))
 
 	mainMiddleware := sessionManager.LoadAndSave(router)

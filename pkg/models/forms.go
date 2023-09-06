@@ -16,7 +16,7 @@ type LoginForm struct {
 	validator.Validator `form:"-`
 }
 
-type SignupForm struct {
+type RegisterForm struct {
 	Email               string `form:"email"`
 	Password            string `form:"password"`
 	Username            string `form:"username"`
@@ -72,4 +72,70 @@ func DecodePostForm(r *http.Request, dst any) error {
 		return err
 	}
 	return nil
+}
+
+type OpenLibResponse map[string]JSONBook
+
+type JSONBook struct {
+	URL     string `json:"url"`
+	Key     string `json:"key"`
+	Title   string `json:"title"`
+	Authors []struct {
+		URL  string `json:"url"`
+		Name string `json:"name"`
+	} `json:"authors"`
+	NumberOfPages int    `json:"number_of_pages"`
+	Pagination    string `json:"pagination"`
+	Weight        string `json:"weight"`
+	ByStatement   string `json:"by_statement"`
+	Identifiers   struct {
+		Amazon       []string `json:"amazon"`
+		Google       []string `json:"google"`
+		Librarything []string `json:"librarything"`
+		Goodreads    []string `json:"goodreads"`
+		Isbn10       []string `json:"isbn_10"`
+		Isbn13       []string `json:"isbn_13"`
+		Lccn         []string `json:"lccn"`
+		Oclc         []string `json:"oclc"`
+		Openlibrary  []string `json:"openlibrary"`
+	} `json:"identifiers"`
+	Classifications struct {
+		LcClassifications []string `json:"lc_classifications"`
+		DeweyDecimalClass []string `json:"dewey_decimal_class"`
+	} `json:"classifications"`
+	Publishers []struct {
+		Name string `json:"name"`
+	} `json:"publishers"`
+	PublishPlaces []struct {
+		Name string `json:"name"`
+	} `json:"publish_places"`
+	PublishDate string `json:"publish_date"`
+	Subjects    []struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"subjects"`
+	Notes           string `json:"notes"`
+	TableOfContents []struct {
+		Level   int    `json:"level"`
+		Label   string `json:"label"`
+		Title   string `json:"title"`
+		Pagenum string `json:"pagenum"`
+	} `json:"table_of_contents"`
+	Links []struct {
+		Title string `json:"title"`
+		URL   string `json:"url"`
+	} `json:"links"`
+	Ebooks []struct {
+		PreviewURL   string `json:"preview_url"`
+		Availability string `json:"availability"`
+		Formats      struct {
+		} `json:"formats"`
+		BorrowURL  string `json:"borrow_url"`
+		Checkedout bool   `json:"checkedout"`
+	} `json:"ebooks"`
+	Cover struct {
+		Small  string `json:"small"`
+		Medium string `json:"medium"`
+		Large  string `json:"large"`
+	} `json:"cover"`
 }

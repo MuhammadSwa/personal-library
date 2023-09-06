@@ -10,11 +10,13 @@
   <script src="/static/js/bundle.js"></script>
 </head>
 
-<body hx-boost="true" class="container">
-  {{template "nav" .}}
-  <main>{{template "main" .}}</main>
-  <span class="loading loading-spinner loading-xs"></span>
-  <footer>Made with 💕</footer>
+<body hx-boost="true" class="text-center">
+  <header class="h-auto">{{template "nav" .}}</header>
+
+  <main class="">
+      {{template "main" .}}
+    </main>
+  <!-- <footer>Made with 💕</footer> -->
 </body>
 
 </html>

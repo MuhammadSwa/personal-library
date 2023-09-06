@@ -6,7 +6,7 @@ CREATE TABLE books (
     author TEXT NOT NULL DEFAULT '',
     category TEXT NOT NULL DEFAULT '',
     publisher TEXT NOT NULL DEFAULT '',
-    -- TODO: publishation_date
+    -- TODO: publishation_date, publish_date
     year_of_publishing INT NOT NULL DEFAULT 0,
     -- image should be a blob
     -- or a path to the image

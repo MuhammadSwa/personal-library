@@ -1,0 +1,10 @@
+{{define "title"}}{{.Form.Title}}{{end}}
+{{define "main"}}
+  <main>
+  <form method="POST" action="/create">
+    {{template "book_form" .}}
+    <input type="submit" value="Edit" hx-put="/edit/book/{{.Form.ID}}" hx-target="body" hx-push-url="true" />
+  </form>
+  </main>
+
+{{end}}

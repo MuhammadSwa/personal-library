@@ -2,21 +2,8 @@
 {{define "main"}}
   <form method="POST" action="/create">
     {{template "book_form" .}}
+    <button hx-include="[name='isbn']" hx-get="/fetchByIsbn" hx-target="body">get by isbn</button>
     <input type="submit" value="Create" hx-post="/create" hx-target="main" hx-select="main" hx-swap="outerHTML" hx-push-url="true"/>
   </form>
 {{end}}
 
-	<!-- ID               int32 -->
-	<!-- Isbn             string -->
-	<!-- Title            string -->
-	<!-- Author           string -->
-	<!-- Category         string -->
-	<!-- Publisher        string -->
-	<!-- YearOfPublishing int32 -->
-	<!-- Img              string -->
-	<!-- NumberOfPages    int32 -->
-	<!-- PersonalRating   float6 -->
-
-	<!-- PersonalNotes    string -->
-	<!-- ReadStatus       bool -->
-	<!-- ReadDate         time.Time -->

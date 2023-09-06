@@ -1,0 +1,43 @@
+<!-- <h2>Login</h2> -->
+<!-- <form method="POST" action="/login"> -->
+<!--   {{with .Form.NonFieldErrors}} -->
+<!--   <label class="error">{{.}}</label> -->
+<!--   {{end}} -->
+<!--   <label for="email">Email</label> -->
+<!--   {{with .Form.FieldErrors.email}} -->
+<!--   <label class="error">{{.}}</label> -->
+<!--   {{end}} <input type="email" id="email" name="email" value="{{.Form.Email}}" required aria-label="Login" -->
+<!--     {{/*aria-invalid="" */}} /> -->
+<!---->
+<!--   <label for="password">Password</label> -->
+<!--   {{with .Form.FieldErrors.password}} -->
+<!--   <label class="error">{{.}}</label> -->
+<!--   {{end}} -->
+<!--   <input type="password" id="password" name="password" required aria-label="Password" /> -->
+<!--   <!-- submit form -->
+<!--   <input type="submit" value="Login" /> -->
+<!-- </form> -->
+
+  <h2>Sign Up</h2>
+    <form method="POST" action="/register" >
+      <label for="username">Username</label>
+        {{with .Form.FieldErrors.username}}
+        <label class='error'>{{.}}</label>
+      {{end}}
+      <input type="text" id="username" name="username" value="{{.Form.Username}}">
+
+      <label for="email">Email</label>
+        {{with .Form.FieldErrors.email}}
+          <label class='error'>{{.}}</label>
+        {{end}}
+      <input type="text" id="email" name="email" value="{{.Form.Email}}">
+
+      <label for="password">Password</label>
+        {{with .Form.FieldErrors.password}}
+          <label class='error'>{{.}}</label>
+        {{end}}
+      <input type="password" id="password" name="password" >
+
+        <!-- submit form -->
+      <input type="submit" value="Sign Up">
+    </form>

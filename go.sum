@@ -1,3 +1,5 @@
+github.com/Jeffail/gabs v1.4.0 h1://5fYRRTq1edjfIrQGvdkcd22pkYUrHZ5YC/H2GJVAo=
+github.com/Jeffail/gabs v1.4.0/go.mod h1:6xMvQMK4k33lb7GUUpaAPh6nKMmemQeg5d4gn7/bOXc=
 github.com/alexedwards/scs/postgresstore v0.0.0-20230327161757-10d4299e3b24 h1:zTZ/Tp0vT6uUxLn8PJR5lOORPQYu2Hlamwr7bEqUeEc=
 github.com/alexedwards/scs/postgresstore v0.0.0-20230327161757-10d4299e3b24/go.mod h1:TDDdV/xnjj+/4zBQ9a2k+i2AbuAdY7SQjPUh5zoTZ3M=
 github.com/alexedwards/scs/v2 v2.5.1 h1:EhAz3Kb3OSQzD8T+Ub23fKsiuvE0GzbF5Lgn0uTwM3Y=

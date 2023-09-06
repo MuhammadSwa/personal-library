@@ -1,0 +1,529 @@
+{
+  "publishers": [
+    "O'Reilly"
+  ],
+  "identifiers": {
+    "librarything": [
+      "171892"
+    ],
+    "goodreads": [
+      "425210"
+    ]
+  },
+  "table_of_contents": [
+    {
+      "level": 1,
+      "title": "Preface",
+      "pagenum": "xi",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 1,
+      "label": "I",
+      "title": "Preliminaries",
+      "pagenum": "1",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "1",
+      "title": "Introduction",
+      "pagenum": "3",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "2",
+      "title": "Pointer Manipulation",
+      "pagenum": "11",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "3",
+      "title": "Recursion",
+      "pagenum": "27",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "4",
+      "title": "Analysis of Algorithms",
+      "pagenum": "38",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 1,
+      "label": "II",
+      "title": "Data Structures",
+      "pagenum": "49",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "5",
+      "title": "Linked Lists",
+      "pagenum": "51",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "6",
+      "title": "Stacks and Queues",
+      "pagenum": "98",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "7",
+      "title": "Sets",
+      "pagenum": "115",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "8",
+      "title": "Hash Tables",
+      "pagenum": "141",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "9",
+      "title": "Trees",
+      "pagenum": "178",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "10",
+      "title": "Heaps and Priority Queues",
+      "pagenum": "235",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "11",
+      "title": "Graphs",
+      "pagenum": "259",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 1,
+      "label": "III",
+      "title": "Algorithms",
+      "pagenum": "299",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "12",
+      "title": "Sorting and Searching",
+      "pagenum": "301",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "13",
+      "title": "Numerical Methods",
+      "pagenum": "343",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "14",
+      "title": "Data Compression",
+      "pagenum": "365",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "15",
+      "title": "Data Encryption",
+      "pagenum": "422",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "16",
+      "title": "Graph Algorithms",
+      "pagenum": "460",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 2,
+      "label": "17",
+      "title": "Geometric Algorithms",
+      "pagenum": "496",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    },
+    {
+      "level": 1,
+      "title": "Index",
+      "pagenum": "525",
+      "type": {
+        "key": "/type/toc_item"
+      }
+    }
+  ],
+  "isbn_10": [
+    "1565924533"
+  ],
+  "covers": [
+    805790
+  ],
+  "lc_classifications": [
+    "QA76.73.C15 L68 1999",
+    "QA76.73.C15L68 1999"
+  ],
+  "key": "/books/OL6805155M",
+  "authors": [
+    {
+      "key": "/authors/OL2466271A"
+    }
+  ],
+  "ocaid": "masteringalgorit00loud_173",
+  "publish_places": [
+    "Sebastopol, CA"
+  ],
+  "languages": [
+    {
+      "key": "/languages/eng"
+    }
+  ],
+  "pagination": "xvii, 540 p. :",
+  "classifications": {},
+  "source_records": [
+    "marc:marc_records_scriblio_net/part01.dat:28777380:853",
+    "marc:marc_loc_updates/v35.i20.records.utf8:838605:954",
+    "marc:marc_loc_updates/v37.i25.records.utf8:108284:1070",
+    "ia:masteringalgorit00loud_173",
+    "ia:masteringalgorit00loud",
+    "ia:masteringalgorit00loud_072",
+    "ia:masteringalgorit00loud_986",
+    "bwb:9781565924536",
+    "marc:marc_loc_2016/BooksAll.2016.part01.utf8:62847946:1172",
+    "promise:bwb_daily_pallets_2023-08-11:W8-BUP-753"
+  ],
+  "title": "Mastering algorithms with C",
+  "lccn": [
+    "00268032"
+  ],
+  "notes": "\"Useful techniques from sorting to encryption\"--Cover.\r\nIncludes index.",
+  "number_of_pages": 540,
+  "edition_name": "1st ed.",
+  "dewey_decimal_class": [
+    "005.13/3"
+  ],
+  "subjects": [
+    "C (Computer program language)",
+    "Computer algorithms",
+    "Data structures (Computer science)"
+  ],
+  "publish_date": "1999",
+  "publish_country": "cau",
+  "by_statement": "Kyle Loudon.",
+  "oclc_numbers": [
+    "42291283"
+  ],
+  "works": [
+    {
+      "key": "/works/OL222902W"
+    }
+  ],
+  "type": {
+    "key": "/type/edition"
+  },
+  "local_id": [
+    "urn:bwbsku:W8-BUP-753"
+  ],
+  "latest_revision": 20,
+  "revision": 20,
+  "created": {
+    "type": "/type/datetime",
+    "value": "2008-04-01T03:28:50.625462"
+  },
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2023-08-13T01:02:51.914298"
+  }
+}
+{
+  "ISBN:9781565924536": {
+    "url": "https://openlibrary.org/books/OL6805155M/Mastering_algorithms_with_C",
+    "key": "/books/OL6805155M",
+    "title": "Mastering algorithms with C",
+    "authors": [
+      {
+        "url": "https://openlibrary.org/authors/OL2466271A/Kyle_Loudon",
+        "name": "Kyle Loudon"
+      },
+      {
+        "url": "https://openlibrary.org/authors/OL2726789A/Andy_Oram",
+        "name": "Andy Oram"
+      }
+    ],
+    "number_of_pages": 540,
+    "pagination": "xvii, 540 p. :",
+    "by_statement": "Kyle Loudon.",
+    "identifiers": {
+      "librarything": [
+        "171892"
+      ],
+      "goodreads": [
+        "425210"
+      ],
+      "isbn_10": [
+        "1565924533"
+      ],
+      "lccn": [
+        "00268032"
+      ],
+      "oclc": [
+        "42291283"
+      ],
+      "openlibrary": [
+        "OL6805155M"
+      ]
+    },
+    "classifications": {
+      "lc_classifications": [
+        "QA76.73.C15 L68 1999",
+        "QA76.73.C15L68 1999"
+      ],
+      "dewey_decimal_class": [
+        "005.13/3"
+      ]
+    },
+    "publishers": [
+      {
+        "name": "O'Reilly"
+      }
+    ],
+    "publish_places": [
+      {
+        "name": "Sebastopol, CA"
+      }
+    ],
+    "publish_date": "1999",
+    "subjects": [
+      {
+        "name": "Computer algorithms",
+        "url": "https://openlibrary.org/subjects/computer_algorithms"
+      },
+      {
+        "name": "Algorithms",
+        "url": "https://openlibrary.org/subjects/algorithms"
+      },
+      {
+        "name": "C (Computer program language)",
+        "url": "https://openlibrary.org/subjects/c_(computer_program_language)"
+      },
+      {
+        "name": "Data structures (Computer science)",
+        "url": "https://openlibrary.org/subjects/data_structures_(computer_science)"
+      },
+      {
+        "name": "Microsoft C.",
+        "url": "https://openlibrary.org/subjects/microsoft_c."
+      },
+      {
+        "name": "C (computer program language)",
+        "url": "https://openlibrary.org/subjects/c_(computer_program_language)"
+      },
+      {
+        "name": "Data structures (computer science)",
+        "url": "https://openlibrary.org/subjects/data_structures_(computer_science)"
+      }
+    ],
+    "notes": "\"Useful techniques from sorting to encryption\"--Cover.\r\nIncludes index.",
+    "table_of_contents": [
+      {
+        "level": 1,
+        "label": "",
+        "title": "Preface",
+        "pagenum": "xi"
+      },
+      {
+        "level": 1,
+        "label": "I",
+        "title": "Preliminaries",
+        "pagenum": "1"
+      },
+      {
+        "level": 2,
+        "label": "1",
+        "title": "Introduction",
+        "pagenum": "3"
+      },
+      {
+        "level": 2,
+        "label": "2",
+        "title": "Pointer Manipulation",
+        "pagenum": "11"
+      },
+      {
+        "level": 2,
+        "label": "3",
+        "title": "Recursion",
+        "pagenum": "27"
+      },
+      {
+        "level": 2,
+        "label": "4",
+        "title": "Analysis of Algorithms",
+        "pagenum": "38"
+      },
+      {
+        "level": 1,
+        "label": "II",
+        "title": "Data Structures",
+        "pagenum": "49"
+      },
+      {
+        "level": 2,
+        "label": "5",
+        "title": "Linked Lists",
+        "pagenum": "51"
+      },
+      {
+        "level": 2,
+        "label": "6",
+        "title": "Stacks and Queues",
+        "pagenum": "98"
+      },
+      {
+        "level": 2,
+        "label": "7",
+        "title": "Sets",
+        "pagenum": "115"
+      },
+      {
+        "level": 2,
+        "label": "8",
+        "title": "Hash Tables",
+        "pagenum": "141"
+      },
+      {
+        "level": 2,
+        "label": "9",
+        "title": "Trees",
+        "pagenum": "178"
+      },
+      {
+        "level": 2,
+        "label": "10",
+        "title": "Heaps and Priority Queues",
+        "pagenum": "235"
+      },
+      {
+        "level": 2,
+        "label": "11",
+        "title": "Graphs",
+        "pagenum": "259"
+      },
+      {
+        "level": 1,
+        "label": "III",
+        "title": "Algorithms",
+        "pagenum": "299"
+      },
+      {
+        "level": 2,
+        "label": "12",
+        "title": "Sorting and Searching",
+        "pagenum": "301"
+      },
+      {
+        "level": 2,
+        "label": "13",
+        "title": "Numerical Methods",
+        "pagenum": "343"
+      },
+      {
+        "level": 2,
+        "label": "14",
+        "title": "Data Compression",
+        "pagenum": "365"
+      },
+      {
+        "level": 2,
+        "label": "15",
+        "title": "Data Encryption",
+        "pagenum": "422"
+      },
+      {
+        "level": 2,
+        "label": "16",
+        "title": "Graph Algorithms",
+        "pagenum": "460"
+      },
+      {
+        "level": 2,
+        "label": "17",
+        "title": "Geometric Algorithms",
+        "pagenum": "496"
+      },
+      {
+        "level": 1,
+        "label": "",
+        "title": "Index",
+        "pagenum": "525"
+      }
+    ],
+    "ebooks": [
+      {
+        "preview_url": "https://archive.org/details/masteringalgorit00loud_173",
+        "availability": "restricted",
+        "formats": {}
+      }
+    ],
+    "cover": {
+      "small": "https://covers.openlibrary.org/b/id/805790-S.jpg",
+      "medium": "https://covers.openlibrary.org/b/id/805790-M.jpg",
+      "large": "https://covers.openlibrary.org/b/id/805790-L.jpg"
+    }
+  }
+}
