@@ -28,22 +28,16 @@ func NewTemplateData(session *scs.SessionManager, r *http.Request) *templateData
 }
 
 func Render(w http.ResponseWriter, page string, data any) {
-	ts, err := template.New(page).Funcs(functions).ParseGlob("./web/html/partials/*.tmpl.html")
+	ts, err := template.New(page).Funcs(functions).ParseGlob("./web/html/**/*.tmpl.html")
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
 		return
 	}
 	files := []string{
 		"./web/html/base.tmpl.html",
-		// TODO: fragments
-		"./web/html/fragments/books_list.tmpl.html",
-		"./web/html/fragments/book_details.tmpl.html",
-		"./web/html/fragments/footer.tmpl.html",
-		"./web/html/fragments/book_form.tmpl.html",
 		fmt.Sprintf("./web/html/pages/%s.tmpl.html", page),
 	}
 	ts, err = ts.ParseFiles(files...)
-	// ts, err := template.ParseFiles(files...)
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
 		fmt.Println(err)

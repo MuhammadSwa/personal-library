@@ -35,14 +35,17 @@
           value="{{.Form.Isbn}}"
           name="isbn"
         />
+
         <img
           hx-include="[name='isbn']"
           hx-get="/fetchByIsbn"
           hx-target="body"
+          hx-indicator="#spinner"
           src="/static/assets/add-circle-svgrepo-com.svg"
           role="link"
           class="w-10 h-12 cursor-pointer text-green-900 join-item"
         />
+        <span id="spinner" class="htmx-indicator loading loading-spinner"></span>
       </div>
     </div>
 
@@ -160,7 +163,6 @@
     <!-- Read Date -->
     <!-- TODO: date picker ???-->
     <div class="form-control w-full max-w-xs">
-
       <label for="read_date" class="label">
         <span class="label-text">Read Date</span>
       </label>
