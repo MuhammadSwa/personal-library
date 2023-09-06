@@ -1,214 +1,233 @@
 {{define "book_form"}}
-<div>
-  <!-- Book Title input field -->
-  <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="title">
-        <span class="label-text">Book Title</span>
-        {{with .Form.FieldErrors.title}}
-        <span class="label-text-alt text-red-800 font-bold">{{.}}</span>
-        {{end}}
-      </label>
+<!-- Book Title input field -->
+<div id="book_form" class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="title">
+      <span class="label-text">Book Title</span>
+      {{with .Form.FieldErrors.title}}
+      <span class="label-text-alt text-red-800 font-bold">{{.}}</span>
+      {{end}}
+    </label>
 
+    <input
+      type="text"
+      id="title"
+      name="title"
+      class="input input-bordered w-full max-w-xs"
+      value="{{.Form.Title}}"
+    />
+  </div>
+
+  <!-- ISBN input field -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="isbn">
+      <span class="label-text">ISBN</span>
+      {{with .Form.FieldErrors.isbn}}
+      <span class="label-text-alt text-red-800 font-bold">{{.}}</span>
+      {{end}}
+    </label>
+    <div class="join">
       <input
-        type="text"
-        id="title"
-        name="title"
-        class="input input-bordered w-full max-w-xs"
-        value="{{.Form.Title}}"
+        type="number"
+        id="isbn"
+        class="input input-bordered w-full max-w-xs join-item"
+        value="{{.Form.Isbn}}"
+        name="isbn"
       />
-    </div>
-
-    <!-- ISBN input field -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="isbn">
-        <span class="label-text">ISBN</span>
-        {{with .Form.FieldErrors.isbn}}
-        <span class="label-text-alt text-red-800 font-bold">{{.}}</span>
-        {{end}}
-      </label>
-      <div class="join">
-        <input
-          type="number"
-          id="isbn"
-          class="input input-bordered w-full max-w-xs join-item"
-          value="{{.Form.Isbn}}"
-          name="isbn"
-        />
-        <img
-          hx-include="[name='isbn']"
-          hx-get="/fetchByIsbn"
-          hx-target="body"
-          src="/static/assets/add-circle-svgrepo-com.svg"
-          role="link"
-          class="w-10 h-12 cursor-pointer text-green-900 join-item"
-        />
-      </div>
-    </div>
-
-    <!-- Author input field -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="author">
-        <span class="label-text">Author</span>
-      </label>
-      <input
-        type="text"
-        id="author"
-        name="author"
-        class="input input-bordered w-full max-w-xs"
-        value="{{.Form.Author}}"
+      <img
+        hx-include="[name='isbn']"
+        hx-get="/fetchByIsbn"
+        hx-target="#book_form"
+        src="/static/assets/add-circle-svgrepo-com.svg"
+        role="link"
+        class="w-10 h-12 cursor-pointer text-green-900 join-item"
+        hx-indicator="#spinner"
+        hx-swap="outerHTML"
       />
-    </div>
-
-    <!-- Category select field -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="category">
-        <span class="label-text">Category</span>
-      </label>
-      <select id="category" name="category" class="select select-bordered">
-        <option disabled selected>Book Category</option>
-        <!-- TODO: a range loop should be here -->
-        <!-- TODO: a button to add a category on the fly? -->
-        <option value="programming">Programming</option>
-        <option value="دين">دين</option>
-        <option>Lord of the Rings</option>
-        <option>Planet of the Apes</option>
-        <option>Star Trek</option>
-      </select>
-    </div>
-
-    <!-- Year of publishing -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="year_of_publishing">
-        <span class="label-text">Publish Date</span>
-      </label>
-      <input
-        type="text"
-        id="year_of_publishing"
-        name="YearOfPublishing"
-        class="input input-bordered w-full max-w-xs"
-        value="{{.Form.YearOfPublishing}}"
-      />
-    </div>
-
-    <!-- Book Cover -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="img">
-        <span class="label-text">Book Cover</span>
-        {{with .Form.FieldErrors.img}}
-        <span class="label-text-alt text-red-800 font-bold">{{.}}</span>
-        {{end}}
-      </label>
-      <input
-        type="text"
-        id="img"
-        name="img"
-        class="input input-bordered w-full max-w-xs"
-        value="{{.Form.Img}}"
-      />
-    </div>
-
-    <!-- Number of pages -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="number_of_pages">
-        <span class="label-text">Number of pages</span>
-      </label>
-      <input
-        type="text"
-        id="number_of_pages"
-        name="number_of_pages"
-        class="input input-bordered w-full max-w-xs"
-        value="{{.Form.NumberOfPages}}"
-      />
-    </div>
-
-    <!-- Personal Rating -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="personal_rating">
-        <span class="label-text">Personal Rating</span>
-      </label>
-
-      <div class="rating">
-        {{/*
-        <!-- TODO: Make {{eq 5 PersonalRating}}checked{{end}} -->
-        */}}
-        <input value="1" type="radio" name="rating-1" class="mask mask-star" />
-        <input value="2" type="radio" name="rating-1" class="mask mask-star" />
-        <input value="3" type="radio" name="rating-1" class="mask mask-star" />
-        <input value="4" type="radio" name="rating-1" class="mask mask-star" />
-        <input value="5" type="radio" name="rating-1" class="mask mask-star" />
-      </div>
-    </div>
-    <!-- <input type="number" name="personal_rating" id="personal_rating" value="{{.Form.PersonalRating}}"> -->
-
-    <!-- Read status -->
-    <!-- TODO: find a better name -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label cursor-pointer" for="read_status">
-        <span class="label-text">Read Status</span>
-        <!-- TODO: if true checked else ...  -->
-        <input
-          type="checkbox"
-          checked="{{.Form.ReadStatus}}"
-          class="checkbox"
-          name="read_status"
-          id="read_status"
-        />
-      </label>
-    </div>
-
-    <!-- Read Date -->
-    <!-- TODO: date picker ???-->
-    <div class="form-control w-full max-w-xs">
-
-      <label for="read_date" class="label">
-        <span class="label-text">Read Date</span>
-      </label>
-      <input
-        type="date"
-        name="read_date"
-        id="read_date"
-        value="{{.Form.ReadDate}}"
-        class="block w-full px-4 py-2 mt-2 border rounded-md"
-      />
-    </div>
-
-    <!-- Personal Notes -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="personal_notes">
-        <span class="label-text">Personal Notes</span>
-      </label>
-      <textarea
-        class="textarea textarea-bordered h-24"
-        id="personal_notes"
-        name="personal_notes"
-      >
-        {{.Form.PersonalNotes}}
-      </textarea>
-    </div>
-    <div class="form-control w-full max-w-xs">
-      <label class="label">
-        <span class="label-text">Pick a cover</span>
-      </label>
-      <input
-        type="file"
-        class="file-input file-input-bordered w-full max-w-xs"
-      />
-    </div>
-    {{/*Make the percentage based on number_of_pages*/}}
-    <div class="form-control w-full max-w-xs">
-      <label class="label" for="progress">
-        <span class="label-text">Progress</span>
-      </label>
-      <input
-        type="range"
-        name="progress"
-        min="0"
-        max="100"
-        value="40"
-        class="range range-xs"
-      />
+      <span
+        id="spinner"
+        class="htmx-indicator loading loading-spinner loading-xs"
+      ></span>
     </div>
   </div>
-  {{end}}
+
+  <!-- Author input field -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="author">
+      <span class="label-text">Author</span>
+    </label>
+    <input
+      type="text"
+      id="author"
+      name="author"
+      class="input input-bordered w-full max-w-xs"
+      value="{{.Form.Author}}"
+    />
+  </div>
+
+  <!-- Category select field -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="category">
+      <span class="label-text">Category</span>
+    </label>
+    <select
+      required
+      id="category"
+      name="category"
+      class="select select-bordered"
+    >
+      <option disabled selected>Book Category</option>
+      <!-- TODO: a range loop should be here -->
+      <!-- TODO: a button to add a category on the fly? -->
+      <option value="programming">Programming</option>
+      <option value="دين">دين</option>
+      <option>Lord of the Rings</option>
+      <option>Planet of the Apes</option>
+      <option>Star Trek</option>
+    </select>
+  </div>
+
+  <!-- Year of publishing -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="year_of_publishing">
+      <span class="label-text">Publish Date</span>
+    </label>
+    <input
+      type="text"
+      id="year_of_publishing"
+      name="year_of_publishing"
+      class="input input-bordered w-full max-w-xs"
+      value="{{.Form.YearOfPublishing}}"
+    />
+  </div>
+
+  <!-- Publisher Name -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="year_of_publishing">
+      <span class="label-text">Publisher</span>
+    </label>
+    <input
+      type="text"
+      id="publisher"
+      name="publisher"
+      class="input input-bordered w-full max-w-xs"
+      value="{{.Form.Publisher}}"
+    />
+  </div>
+
+  <!-- Book Cover -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="img">
+      <span class="label-text">Book Cover</span>
+      {{with .Form.FieldErrors.img}}
+      <span class="label-text-alt text-red-800 font-bold">{{.}}</span>
+      {{end}}
+    </label>
+    <input
+      type="text"
+      id="img"
+      name="img"
+      class="input input-bordered w-full max-w-xs"
+      value="{{.Form.Img}}"
+    />
+  </div>
+
+  <!-- Number of pages -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="number_of_pages">
+      <span class="label-text">Number of pages</span>
+    </label>
+    <input
+      type="text"
+      id="number_of_pages"
+      name="number_of_pages"
+      class="input input-bordered w-full max-w-xs"
+      value="{{.Form.NumberOfPages}}"
+    />
+  </div>
+
+  <!-- Personal Rating -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="personal_rating">
+      <span class="label-text">Personal Rating</span>
+    </label>
+
+    <div class="rating">
+      {{/*
+      <!-- TODO: Make {{eq 5 PersonalRating}}checked{{end}} -->
+      */}}
+      <input value="1" type="radio" name="rating-1" class="mask mask-star" />
+      <input value="2" type="radio" name="rating-1" class="mask mask-star" />
+      <input value="3" type="radio" name="rating-1" class="mask mask-star" />
+      <input value="4" type="radio" name="rating-1" class="mask mask-star" />
+      <input value="5" type="radio" name="rating-1" class="mask mask-star" />
+    </div>
+  </div>
+  <!-- <input type="number" name="personal_rating" id="personal_rating" value="{{.Form.PersonalRating}}"> -->
+
+  <!-- Read status -->
+  <!-- TODO: find a better name -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label cursor-pointer" for="read_status">
+      <span class="label-text">Read Status</span>
+      <!-- TODO: if true checked else ...  -->
+      <input
+        type="checkbox"
+        checked="{{.Form.ReadStatus}}"
+        class="checkbox"
+        name="read_status"
+        id="read_status"
+      />
+    </label>
+  </div>
+
+  <!-- Read Date -->
+  <!-- TODO: date picker ???-->
+  <div class="form-control w-full max-w-xs">
+    <label for="read_date" class="label">
+      <span class="label-text">Read Date</span>
+    </label>
+    <input
+      type="date"
+      name="read_date"
+      id="read_date"
+      value="{{.Form.ReadDate}}"
+      class="block w-full px-4 py-2 mt-2 border rounded-md"
+    />
+  </div>
+
+  <!-- Personal Notes -->
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="personal_notes">
+      <span class="label-text">Personal Notes</span>
+    </label>
+    <textarea
+      class="textarea textarea-bordered h-24"
+      id="personal_notes"
+      name="personal_notes"
+    >
+      {{.Form.PersonalNotes}}
+    </textarea>
+  </div>
+  <div class="form-control w-full max-w-xs">
+    <label class="label">
+      <span class="label-text">Pick a cover</span>
+    </label>
+    <input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+  </div>
+  {{/*Make the percentage based on number_of_pages*/}}
+  <div class="form-control w-full max-w-xs">
+    <label class="label" for="progress">
+      <span class="label-text">Progress</span>
+    </label>
+    <input
+      type="range"
+      name="progress"
+      min="0"
+      max="100"
+      value="40"
+      class="range range-xs"
+    />
+  </div>
 </div>
+{{end}}

@@ -46,13 +46,11 @@ func Render(w http.ResponseWriter, page string, data any) {
 	// ts, err := template.ParseFiles(files...)
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
-		fmt.Println(err)
 		return
 	}
 	err = ts.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		errs.WebServerErr(w, "err parsing template")
-		fmt.Println(err)
 		return
 	}
 }
@@ -60,13 +58,11 @@ func Render(w http.ResponseWriter, page string, data any) {
 func RenderFragment(w http.ResponseWriter, page string, data any) {
 	ts, err := template.ParseFiles(fmt.Sprintf("./web/html/fragments/%s.tmpl.html", page))
 	if err != nil {
-		fmt.Println(err)
 		errs.WebServerErr(w, "err parsing template")
 		return
 	}
 	err = ts.ExecuteTemplate(w, page, data)
 	if err != nil {
-		fmt.Println(err)
 		errs.WebServerErr(w, "err parsing template")
 		return
 	}

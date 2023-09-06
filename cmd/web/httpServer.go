@@ -59,7 +59,7 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 	router.Handler(http.MethodGet, "/books/:page", protectedRoutes.ThenFunc(controllers.GetAllBooks))
 	router.Handler(http.MethodGet, "/books", protectedRoutes.ThenFunc(controllers.GetAllBooks))
 	router.Handler(http.MethodPost, "/create", protectedRoutes.ThenFunc(controllers.CreateBookPost))
-	router.HandlerFunc(http.MethodGet, "/fetchByIsbn", controllers.FetchBookByIsbn)
+	router.HandlerFunc(http.MethodGet, "/fetchByIsbn", controllers.FetchByIsbn)
 	// router.Handler(http.MethodPost, "/fetchByIsbn", protectedRoutes.ThenFunc(controllers.CreateBookWithISBN))
 	router.Handler(http.MethodGet, "/profile", protectedRoutes.ThenFunc(controllers.Profile))
 

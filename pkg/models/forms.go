@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -68,7 +67,6 @@ func DecodePostForm(r *http.Request, dst any) error {
 			panic(err)
 		}
 		// For all other errors, we return them as normal.
-		fmt.Println(err)
 		return err
 	}
 	return nil

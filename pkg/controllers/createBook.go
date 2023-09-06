@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/muhammadswa/personal-library/internal/database"
 	errs "github.com/muhammadswa/personal-library/internal/errors"
@@ -15,35 +15,35 @@ import (
 )
 
 func (bc *Controllers) CreateBook(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		errs.WebClientErr(w, "Error parsing form")
-		return
-	}
+	// err := r.ParseForm()
+	// if err != nil {
+	// 	errs.WebClientErr(w, "Error parsing form")
+	// 	return
+	// }
 	// change from map[string][]string to map[string]string
-	formMap := make(map[string]string, len(r.Form))
-	for k, v := range r.Form {
-		formMap[k] = v[0]
-	}
+	// formMap := make(map[string]string, len(r.Form))
+	// for k, v := range r.Form {
+	// 	formMap[k] = v[0]
+	// }
 
-	yearOfPublishing, _ := strconv.Atoi(formMap["year_of_publishing"])
-	numOfPages, _ := strconv.Atoi(formMap["number_of_pages"])
-	form := &models.BookForm{
-		Isbn:             r.Form.Get("isbn"),
-		Title:            r.Form.Get("title"),
-		Author:           r.Form.Get("author"),
-		Category:         r.Form.Get("category"),
-		Publisher:        r.Form.Get("publisher"),
-		Img:              r.Form.Get("img"),
-		YearOfPublishing: int32(yearOfPublishing),
-		NumberOfPages:    int32(numOfPages),
-	}
-
-	form.Isbn = r.Form.Get("isbn")
-	form.Title = r.Form.Get("title")
-	form.Author = r.Form.Get("author")
-	templateData := templates.NewTemplateData(bc.session, r)
-	templateData.Form = form
+	// yearOfPublishing, _ := strconv.Atoi(formMap["year_of_publishing"])
+	// numOfPages, _ := strconv.Atoi(formMap["number_of_pages"])
+	// form := &models.BookForm{
+	// 	Isbn:             r.Form.Get("isbn"),
+	// 	Title:            r.Form.Get("title"),
+	// 	Author:           r.Form.Get("author"),
+	// 	Category:         r.Form.Get("category"),
+	// 	Publisher:        r.Form.Get("publisher"),
+	// 	Img:              r.Form.Get("img"),
+	// 	YearOfPublishing: int32(yearOfPublishing),
+	// 	NumberOfPages:    int32(numOfPages),
+	// }
+	//
+	// form.Isbn = r.Form.Get("isbn")
+	// form.Title = r.Form.Get("title")
+	// form.Author = r.Form.Get("author")
+	// templateData := templates.NewTemplateData(bc.session, r)
+	// templateData.Form = form
 	// book := database.Book{
 	// 	Isbn:             form.Isbn,
 	// 	Title:            form.Title,
@@ -72,6 +72,7 @@ func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 		errs.WebClientErr(w, "Error parsing form")
 		return
 	}
+	// TODO: try to remove it ? do we need it?
 	form := &models.BookForm{}
 
 	err = models.DecodePostForm(r, &form)
@@ -144,36 +145,41 @@ func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 		ReadDate:         form.ReadDate,
 	})
 	if err != nil {
-		fmt.Println(err)
 		errs.WebServerErr(w, "Error creating book")
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/book/%d", id), http.StatusSeeOther)
 }
 
-func (bc *Controllers) FetchBookByIsbn(w http.ResponseWriter, r *http.Request) {
+func (bc *Controllers) FetchByIsbn(w http.ResponseWriter, r *http.Request) {
 	isbn := r.URL.Query().Get("isbn")
-	book, err := getBookByIsbn(isbn)
+	form, err := getBookByIsbn(isbn)
 	if err != nil {
 		errs.WebServerErr(w, "Error fetching book")
 		return
 	}
-	// construct query string
-	q := url.Values{
-		"isbn":               {isbn},
-		"title":              {book.Title},
-		"author":             {book.Authors[0].Name},
-		"number_of_pages":    {strconv.Itoa(book.NumberOfPages)},
-		"year_of_publishing": {book.PublishDate},
-		"img":                {book.Cover.Large},
-	}
-	createUrl := fmt.Sprintf("/create?%s", q.Encode())
+	data := templates.NewTemplateData(bc.session, r)
+	data.Form = form
 
-	http.Redirect(w, r, createUrl, http.StatusSeeOther)
+	templates.RenderFragment(w, "book_form", data)
+
+	// construct query string
+	// q := url.Values{
+	// 	"isbn":               {isbn},
+	// 	"title":              {book.Title},
+	// 	"author":             {book.Authors[0].Name},
+	// 	"number_of_pages":    {strconv.Itoa(book.NumberOfPages)},
+	// 	"year_of_publishing": {book.PublishDate},
+	// 	"img":                {book.Cover.Large},
+	// 	"publisher":          {book.Publishers[0].Name},
+	// }
+	// createUrl := fmt.Sprintf("/create?%s", q.Encode())
+	//
+	// http.Redirect(w, r, createUrl, http.StatusSeeOther)
 }
 
 // put this is it's own file and package? in pkg/api?
-func getBookByIsbn(isbn string) (*models.JSONBook, error) {
+func getBookByIsbn(isbn string) (*models.BookForm, error) {
 
 	// TODO: make sure isbn is valid (13 digits) and not empty , no - or spaces ?
 	// maybe - is okay? ? use regex client side
@@ -193,9 +199,27 @@ func getBookByIsbn(isbn string) (*models.JSONBook, error) {
 		return nil, err
 	}
 
-	var book models.JSONBook
-	for _, v := range openLibRes {
-		book = v
+	key := "ISBN:" + isbn
+	jsonBook := openLibRes[key]
+
+	if err != nil {
+		return nil, err
 	}
-	return &book, nil
+	// Dec 07, 2018
+	splits := strings.Split(jsonBook.PublishDate, ", ")[1]
+	publishDate, err := strconv.Atoi(splits)
+	form := models.BookForm{
+		Isbn:             isbn,
+		Title:            jsonBook.Title,
+		Publisher:        jsonBook.Publishers[0].Name,
+		YearOfPublishing: int32(publishDate),
+		Img:              jsonBook.Cover.Large,
+		NumberOfPages:    int32(jsonBook.NumberOfPages),
+		// TODO: contactenate authors
+		Author: jsonBook.Authors[0].Name,
+		// TODO: []string of all categories ??
+		Category: jsonBook.Subjects[0].Name,
+	}
+
+	return &form, nil
 }

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -131,7 +130,6 @@ func (uc *Controllers) RegisterPost(w http.ResponseWriter, r *http.Request, ps h
 
 	// create a new user
 	id, err := uc.repos.CreateUser(r.Context(), form.Email, form.Password, form.Username)
-	fmt.Println("Id from register", id)
 	if err != nil {
 		templateData := templates.NewTemplateData(uc.session, r)
 		templateData.Form = form

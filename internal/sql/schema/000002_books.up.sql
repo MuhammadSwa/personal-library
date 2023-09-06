@@ -11,6 +11,7 @@ CREATE TABLE books (
     -- image should be a blob
     -- or a path to the image
     img TEXT NOT NULL DEFAULT '',
+    -- only pages?
     number_of_pages INT NOT NULL DEFAULT 0,
     -- personal rating should be from 1 to 5 a floating number
     personal_rating FLOAT NOT NULL DEFAULT 0,

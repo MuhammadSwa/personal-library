@@ -2,14 +2,12 @@ package repositories
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/muhammadswa/personal-library/internal/database"
 )
 
 func (br *Repositories) GetBookByID(ctx context.Context, id int) (*database.Book, error) {
 	book, err := br.db.GetBookByID(ctx, int32(id))
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
