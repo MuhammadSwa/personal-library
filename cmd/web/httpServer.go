@@ -39,6 +39,7 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 	isAuthenticated := dynamicMiddleware.Append(middleware.isAuthenticated)
 
 	router := httprouter.New()
+	router.NotFound = http.HandlerFunc(controllers.NotFound)
 	// serve static files
 	router.ServeFiles("/static/*filepath", http.Dir("./web/static/"))
 

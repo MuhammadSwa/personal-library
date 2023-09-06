@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "alpinejs": "^3.13.0",
     "tw-elements": "1.0.0-rc.1"
+  },
+  "devDependencies": {
+    "alpinejs-scroll-to": "^1.1.0"
   }
 }

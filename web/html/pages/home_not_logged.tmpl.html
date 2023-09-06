@@ -1,15 +1,27 @@
-{{define "title"}}Home{{end}} {{define "main"}}
-<div class="hero min-h-screen bg-base-200">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">Hello there</h1>
-      <p class="py-6">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-        excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a
-        id nisi.
-      </p>
-      <button class="btn btn-primary">Get Started</button>
+{{define "title"}}Home{{end}} 
+{{define "main"}}
+  <div>
+    <div class="container mx-auto flex flex-col items-center py-12 sm:py-24">
+      <div class="w-11/12 sm:w-2/3 lg:flex justify-center items-center flex-col mb-5 sm:mb-10">
+        <h1
+          class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center text-gray-200 font-black leading-7 md:leading-10">
+          The Freedom to Create the
+          <span class="text-indigo-600">Websites</span>
+          You Want
+        </h1>
+        <p class="mt-5 sm:mt-10 lg:w-10/12 text-gray-400 font-normal text-center text-sm sm:text-lg">
+          A professonal website drives sales. Create a beautiful website to
+          impress and engage new customers and establish your business online
+        </p>
+      </div>
+      <div class="flex justify-center items-center gap-4">
+        <a class="btn btn-primary btn-lg btn-wide" herf="/register">
+          Register Now
+        </a>
+        <a class="btn btn-lg btn-outline btn-wide" href="/features">
+          Features
+        </a>
+      </div>
     </div>
   </div>
-</div>
 {{end}}

@@ -18,7 +18,7 @@
     <div class="card-body">
       <h2 class="card-title">
         {{.Title}} {{with .Author}}
-        <div class="badge badge-secondary">{{.}}</div>
+        <div class="badge">{{.}}</div>
         {{end}}
       </h2>
       <p>If a dog chews shoes whose shoes does he choose?</p>
@@ -31,10 +31,15 @@
       </div>
     </div>
   </div>
-  {{end}} {{end}} {{if .IsPageNext}}
-  <button id="load-more-btn" hx-get="/books/{{.NextPage}}" hx-swap="outerHTML">
-    Load more
-  </button>
-  {{end}}
+  {{end}} {{end}}
 </div>
-{{end}}
+{{if .IsPageNext}}
+<button
+  id="load-more-btn"
+  hx-get="/books/{{.NextPage}}"
+  hx-swap="outerHTML"
+  class="btn btn-wide btn-neutral mt-8"
+>
+  Load more
+</button>
+{{end}} {{end}}

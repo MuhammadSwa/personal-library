@@ -36,3 +36,8 @@ func (sc *Controllers) Profile(w http.ResponseWriter, r *http.Request) {
 	data := templates.NewTemplateData(sc.session, r)
 	templates.Render(w, "profile", data)
 }
+
+func (sc *Controllers) NotFound(w http.ResponseWriter, r *http.Request) {
+	data := templates.NewTemplateData(sc.session, r)
+	templates.Render(w, "404_page", data)
+}

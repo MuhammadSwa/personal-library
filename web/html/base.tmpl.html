@@ -1,23 +1,26 @@
 {{define "base"}}
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="scroll-smooth">
 
 <head>
   <title>{{template "title" .}}</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="/static/css/bundle.css" rel="stylesheet" />
-  <script src="/static/js/bundle.js"></script>
+  <script src="/static/js/bundle.js" defer></script>
 </head>
 
-<body hx-boost="true" class="text-center">
-  <header class="h-auto">{{template "nav" .}}</header>
+<body hx-boost="true" class="text-center bg-base-200">
+  <div class="min-h-screen">
+    <header >{{template "nav" .}}</header>
 
-  <main class="">
-      {{template "main" .}}
-    </main>
-  <!-- <footer>Made with 💕</footer> -->
+    <main>{{template "main" .}}</main>
+  </div>
+  {{template "footer" .}}
+  <!-- Going to the top button -->
+  <img role="button" src="./static/assets/up-square-svgrepo-com.svg" id="scrollToTopBtn"
+    class="scrollToTopBtn fixed bottom-12 right-12 z-50 hidden" />
 </body>
 
 </html>
-{{end}}
+{{end}} 

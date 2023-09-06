@@ -1,4 +1,15 @@
 import htmx from "htmx.org";
-import { Collapse, Dropdown, initTE } from "tw-elements";
+import Alpine from "alpinejs";
+import "./toTheUpBtn.js";
 
-initTE({ Collapse, Dropdown });
+document.Alpine = Alpine;
+Alpine.start();
+
+function toggleMenu(flag) {
+  let value = document.getElementById("menu");
+  if (flag) {
+    value.classList.remove("hidden");
+  } else {
+    value.classList.add("hidden");
+  }
+}
