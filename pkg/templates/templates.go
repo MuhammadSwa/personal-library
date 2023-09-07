@@ -30,7 +30,7 @@ func NewTemplateData(session *scs.SessionManager, r *http.Request) *templateData
 func Render(w http.ResponseWriter, page string, data any) {
 	ts, err := template.New(page).Funcs(functions).ParseGlob("./web/html/partials/*.tmpl.html")
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, "err parsing template")
 		return
 	}
 	files := []string{
@@ -45,12 +45,12 @@ func Render(w http.ResponseWriter, page string, data any) {
 	ts, err = ts.ParseFiles(files...)
 	// ts, err := template.ParseFiles(files...)
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, "err parsing template")
 		return
 	}
 	err = ts.ExecuteTemplate(w, "base", data)
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, "err parsing template")
 		return
 	}
 }
@@ -58,12 +58,12 @@ func Render(w http.ResponseWriter, page string, data any) {
 func RenderFragment(w http.ResponseWriter, page string, data any) {
 	ts, err := template.ParseFiles(fmt.Sprintf("./web/html/fragments/%s.tmpl.html", page))
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, "err parsing template")
 		return
 	}
 	err = ts.ExecuteTemplate(w, page, data)
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, "err parsing template")
 		return
 	}
 }

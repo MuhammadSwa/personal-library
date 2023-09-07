@@ -25,14 +25,14 @@ func (uc *Controllers) LoginPost(w http.ResponseWriter, r *http.Request, ps http
 	//TODO: parse login form
 	err := r.ParseForm()
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing form")
+		errs.ClientError(w, "Error parsing form")
 		return
 	}
 	form := &models.LoginForm{}
 
 	err = models.DecodePostForm(r, &form)
 	if err != nil {
-		errs.WebClientErr(w, "Error decoding form")
+		errs.ClientError(w, "Error decoding form")
 		return
 	}
 
@@ -73,7 +73,7 @@ func (uc *Controllers) LoginPost(w http.ResponseWriter, r *http.Request, ps http
 
 	err = uc.session.RenewToken(r.Context())
 	if err != nil {
-		errs.WebServerErr(w, "Error renewing session token")
+		errs.ServerError(w, "Error renewing session token")
 		return
 	}
 
@@ -94,14 +94,14 @@ func (uc *Controllers) RegisterPost(w http.ResponseWriter, r *http.Request, ps h
 	// parse form
 	err := r.ParseForm()
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing form")
+		errs.ClientError(w, "Error parsing form")
 		return
 	}
 	form := &models.RegisterForm{}
 
 	err = models.DecodePostForm(r, &form)
 	if err != nil {
-		errs.WebClientErr(w, "Error decoding form")
+		errs.ClientError(w, "Error decoding form")
 		return
 	}
 
@@ -149,7 +149,7 @@ func (uc *Controllers) RegisterPost(w http.ResponseWriter, r *http.Request, ps h
 
 	err = uc.session.RenewToken(r.Context())
 	if err != nil {
-		errs.WebServerErr(w, "Error renewing session token")
+		errs.ServerError(w, "Error renewing session token")
 		return
 	}
 
@@ -162,7 +162,7 @@ func (uc *Controllers) RegisterPost(w http.ResponseWriter, r *http.Request, ps h
 func (uc *Controllers) LogoutPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	err := uc.session.RenewToken(r.Context())
 	if err != nil {
-		errs.WebServerErr(w, "Error renewing session token")
+		errs.ServerError(w, "Error renewing session token")
 		return
 	}
 	uc.session.Remove(r.Context(), "authenticatedUserID")

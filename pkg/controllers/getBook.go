@@ -18,14 +18,14 @@ func (bc *Controllers) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing offset")
+		errs.ClientError(w, "Error parsing offset")
 		return
 	}
 	// TODO: check maximum offset can be reached, sql rows?
 
 	booksLen, err := bc.repos.GetBooksLength(r.Context())
 	if err != nil {
-		errs.WebServerErr(w, "err getting books")
+		errs.ServerError(w, "err getting books")
 		return
 	}
 
@@ -46,7 +46,7 @@ func (bc *Controllers) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	userId := bc.session.GetInt32(r.Context(), "userId")
 	books, err := bc.repos.GetBooks(r.Context(), userId, query, int(offset))
 	if err != nil {
-		errs.WebServerErr(w, "err getting books")
+		errs.ServerError(w, "err getting books")
 		return
 	}
 	if len(books) < 10 {
@@ -72,12 +72,12 @@ func (bc *Controllers) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing id")
+		errs.ClientError(w, "Error parsing id")
 		return
 	}
 	book, err := bc.repos.GetBookByID(r.Context(), id)
 	if err != nil {
-		errs.WebServerErr(w, "Error getting book")
+		errs.ServerError(w, "Error getting book")
 		return
 	}
 	data := templates.NewTemplateData(bc.session, r)

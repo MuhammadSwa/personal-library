@@ -18,7 +18,7 @@ func (sc *Controllers) Home(w http.ResponseWriter, r *http.Request, ps httproute
 	offset := 0
 	books, err := sc.repos.GetBooks(r.Context(), 0, "", offset)
 	if err != nil {
-		errs.WebServerErr(w, "err getting books")
+		errs.ServerError(w, "err getting books")
 		return
 	}
 

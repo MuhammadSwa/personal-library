@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -76,7 +77,7 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 func (hs *httpServer) Run() error {
 	err := http.ListenAndServe(hs.port, *hs.router)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error starting server: %w", err)
 	}
 	return nil
 }
