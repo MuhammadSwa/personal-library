@@ -19,8 +19,8 @@ jobs:
     steps:
       # Install go
       - name: install go
-        uses: actions/setup-go@v4
-        with:
+        uses: WillAbides/setup-go-faster@v1.8.0
+        with: 
           go-version: 1.21.0
 
       # close the source code for the current ref in the current working dir
@@ -31,8 +31,6 @@ jobs:
       # Linting
       - name: lint with golangci-lint
         uses: golangci/golangci-lint-action@v3
-      - name: use staticcheck
-        uses: dominikh/staticcheck-action@v1.3.0
 
       # Test packages recursively in the repo
       - name: run go test
