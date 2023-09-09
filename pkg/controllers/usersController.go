@@ -176,22 +176,22 @@ func (uc *Controllers) ForgotPassword(w http.ResponseWriter, r *http.Request, ps
 func (uc *Controllers) ForgotPasswordPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
-func (uc *Controllers) authenticateUser(r *http.Request, form models.LoginForm) error {
-	user, err := uc.repos.GetUserByEmail(r.Context(), form.Email)
-	if err != nil {
-		return err
-	}
-
-	// check for password match
-	// template for error
-	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(form.Password))
-	if err != nil {
-		return err
-	}
-
-	err = uc.session.RenewToken(r.Context())
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// func (uc *Controllers) authenticateUser(r *http.Request, form models.LoginForm) error {
+// 	user, err := uc.repos.GetUserByEmail(r.Context(), form.Email)
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	// check for password match
+// 	// template for error
+// 	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(form.Password))
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	err = uc.session.RenewToken(r.Context())
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
