@@ -22,6 +22,7 @@ tasks:
   js:
     cmds:
       - npx esbuild ./web/src/js/main.js --bundle --outfile=./web/static/js/bundle.js --minify --watch
+      # bun build ./web/src/js/main.js --outfile ./web/static/js/bundle.js --minify --watch
   css:
     # deps:
     #   - tailwind
