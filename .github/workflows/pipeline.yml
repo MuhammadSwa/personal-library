@@ -32,7 +32,7 @@ jobs:
       - name: lint with golangci-lint
         uses: golangci/golangci-lint-action@v3
       - name: use staticcheck
-        uses: staticcheck -go 1.21 ./...
+        uses: dominikh/staticcheck-action@v1.3.0
 
       # Test packages recursively in the repo
       - name: run go test
