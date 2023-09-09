@@ -15,7 +15,9 @@ import (
 )
 
 func (bc *Controllers) CreateBook(w http.ResponseWriter, r *http.Request) {
-	templates.Render(w, "create_book", nil)
+	data := templates.New(bc.session, r)
+	// data.Form = models.BookForm{}
+	templates.Render(w, "create_book", data)
 }
 
 func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +25,7 @@ func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 	// parse form
 	err := r.ParseForm()
 	if err != nil {
-		errs.ClientError(w, "Error parsing form")
+		errs.ServerError(w, err)
 		return
 	}
 	// TODO: try to remove it ? do we need it?
@@ -31,7 +33,7 @@ func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 
 	err = models.DecodePostForm(r, &form)
 	if err != nil {
-		errs.ClientError(w, "Error decoding form")
+		errs.ServerError(w, err)
 		return
 	}
 
@@ -54,7 +56,7 @@ func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !form.Valid() {
-		data := templates.NewTemplateData(bc.session, r)
+		data := templates.New(bc.session, r)
 		data.Book = &book
 		data.Form = form
 		templates.Render(w, "create_book", data)
@@ -81,7 +83,7 @@ func (bc *Controllers) CreateBookPost(w http.ResponseWriter, r *http.Request) {
 		ReadDate:         form.ReadDate,
 	})
 	if err != nil {
-		errs.ServerError(w, "Error creating book")
+		errs.ServerError(w, err)
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/book/%d", id), http.StatusSeeOther)
@@ -91,10 +93,10 @@ func (bc *Controllers) FetchByIsbn(w http.ResponseWriter, r *http.Request) {
 	isbn := r.URL.Query().Get("isbn")
 	form, err := getBookByIsbn(isbn)
 	if err != nil {
-		errs.ServerError(w, "Error fetching book")
+		errs.ServerError(w, err)
 		return
 	}
-	data := templates.NewTemplateData(bc.session, r)
+	data := templates.New(bc.session, r)
 	data.Form = form
 
 	templates.RenderFragment(w, "book_form", data)
@@ -108,7 +110,7 @@ func getBookByIsbn(isbn string) (*models.BookForm, error) {
 	openLibraryUrl := fmt.Sprintf("https://openlibrary.org/api/books?bibkeys=ISBN:%s&jscmd=data&format=json", isbn)
 	resp, err := http.Get(openLibraryUrl)
 	if err != nil {
-		return nil, fmt.Errorf("Error fetching book from open library: %v", err)
+		return nil, fmt.Errorf("error fetching book from open library: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -130,7 +132,7 @@ func getBookByIsbn(isbn string) (*models.BookForm, error) {
 	splits := strings.Split(jsonBook.PublishDate, ", ")[1]
 	publishDate, err := strconv.Atoi(splits)
 	if err != nil {
-		return nil, fmt.Errorf("Error converting publish date to int: %v", err)
+		return nil, fmt.Errorf("error converting publish date to int: %v", err)
 	}
 	form := models.BookForm{
 		Isbn:             isbn,

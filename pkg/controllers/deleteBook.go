@@ -13,14 +13,14 @@ func (bc *Controllers) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(idStr)
 
 	if err != nil {
-		errs.ClientError(w, "Error parsing id")
+		errs.ClientError(w, http.StatusBadRequest)
 		return
 	}
 
 	err = bc.repos.DeleteBook(r.Context(), id)
 
 	if err != nil {
-		errs.ServerError(w, "Error deleting book")
+		errs.ServerError(w, err)
 		return
 	}
 
