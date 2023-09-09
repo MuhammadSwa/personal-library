@@ -1,36 +1,37 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
 	_ "github.com/lib/pq"
 	"github.com/muhammadswa/personal-library/config"
-	// "github.com/spf13/viper"
-	// "github.com/muhammadswa/personal-library/models"
+
+	// "github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 // TODO: make people code review this
 
 func main() {
-	fmt.Println("Starting the app...")
 
-	fmt.Println("Initializing configuration...")
+	log.Info().Msg("Starting the app...")
+
+	log.Info().Msg("Initializing configuration...")
 	cfg, err := config.InitConfig()
 	if err != nil {
-		log.Fatalln(err)
+		log.Error().Err(err).Msg("Error initializing configuration")
+		// log.Fatalln(err)
 	}
 
-	fmt.Println("Initializing database...")
+	log.Info().Msg("Initializing database...")
 	conn, err := InitDatabase(cfg.DSN)
 	if err != nil {
-		log.Fatalln(err)
+		log.Error().Err(err).Msg("Error initializing configuration")
 	}
 	defer conn.Close()
-	fmt.Println("Initializing http server...")
+
+	log.Info().Msg("Initializing http server...")
 	httpServer := InitHttpServer(conn, cfg.Port)
 	err = httpServer.Run()
 	if err != nil {
-		log.Fatalln(err)
+		log.Error().Err(err).Msg("Error initializing configuration")
 	}
 }

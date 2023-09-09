@@ -1,11 +1,31 @@
-{{define "title"}}{{.Book.Title}}{{end}}
-{{define "main"}}
-  <main>
+{{define "title"}}{{.Book.Title}}{{end}} {{define "main"}}
+<main>
     {{template "book_details" .}}
-    <div class="grid" hx-push-url="true">
-      <button hx-delete="/book/{{.Book.ID}}" hx-target="body">Delete</button>
-      <button id="edit-book_btn" hx-get="/edit/book/{{.Book.ID}}" hx-target="main" hx-swap="outerHTML" hx-select="main" >Edit</button>
-    </div>
-  </main>
 
-{{end}}
+    <div class="grid grid-cols-2" hx-push-url="true">
+    <button
+      hx-delete="/book/{{.Book.ID}}"
+      hx-target="body"
+      class="btn btn-wide btn-neutral"
+    >
+      Delete
+    </button>
+    <button
+      id="edit-book_btn"
+      hx-get="/edit/book/{{.Book.ID}}"
+      hx-target="main"
+      hx-swap="outerHTML"
+      hx-select="main"
+      class="btn btn-wide btn-neutral"
+    >
+      Edit
+    </button>
+  </div>
+
+</main>
+
+{{end}} {{/*
+<main class="flex flex-col">
+  {{template "book_details" .}}
+</main>
+*/}}

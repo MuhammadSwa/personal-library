@@ -8,6 +8,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/muhammadswa/personal-library/internal/database"
 	errs "github.com/muhammadswa/personal-library/internal/errors"
+	"github.com/muhammadswa/personal-library/pkg/models"
 )
 
 type templateData struct {
@@ -21,16 +22,17 @@ type templateData struct {
 	Query           string
 }
 
-func NewTemplateData(session *scs.SessionManager, r *http.Request) *templateData {
+func New(session *scs.SessionManager, r *http.Request) *templateData {
 	return &templateData{
 		IsAuthenticated: session.Exists(r.Context(), "authenticatedUserID"),
+		Form:            models.BookForm{},
 	}
 }
 
 func Render(w http.ResponseWriter, page string, data any) {
 	ts, err := template.New(page).Funcs(functions).ParseGlob("./web/html/**/*.tmpl.html")
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, err)
 		return
 	}
 	files := []string{
@@ -39,14 +41,12 @@ func Render(w http.ResponseWriter, page string, data any) {
 	}
 	ts, err = ts.ParseFiles(files...)
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
-		fmt.Println(err)
+		errs.ServerError(w, err)
 		return
 	}
 	err = ts.ExecuteTemplate(w, "base", data)
 	if err != nil {
-		errs.WebServerErr(w, "err parsing template")
-		fmt.Println(err)
+		errs.ServerError(w, err)
 		return
 	}
 }
@@ -54,14 +54,12 @@ func Render(w http.ResponseWriter, page string, data any) {
 func RenderFragment(w http.ResponseWriter, page string, data any) {
 	ts, err := template.ParseFiles(fmt.Sprintf("./web/html/fragments/%s.tmpl.html", page))
 	if err != nil {
-		fmt.Println(err)
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, err)
 		return
 	}
 	err = ts.ExecuteTemplate(w, page, data)
 	if err != nil {
-		fmt.Println(err)
-		errs.WebServerErr(w, "err parsing template")
+		errs.ServerError(w, err)
 		return
 	}
 }

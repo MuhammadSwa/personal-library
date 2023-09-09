@@ -17,15 +17,15 @@ func (bc *Controllers) EditBook(w http.ResponseWriter, r *http.Request) {
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing id")
+		errs.ClientError(w, http.StatusBadRequest)
 		return
 	}
 	book, err := bc.repos.GetBookByID(r.Context(), id)
 	if err != nil {
-		errs.WebServerErr(w, "Error getting book")
+		errs.ServerError(w, err)
 		return
 	}
-	data := templates.NewTemplateData(bc.session, r)
+	data := templates.New(bc.session, r)
 	data.Form = &models.BookForm{
 		ID:               book.ID,
 		Isbn:             book.Isbn,
@@ -48,19 +48,19 @@ func (bc *Controllers) EditBookPut(w http.ResponseWriter, r *http.Request) {
 	idStr := httprouter.ParamsFromContext(r.Context()).ByName("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing id")
+		errs.ClientError(w, http.StatusBadRequest)
 		return
 	}
 	err = r.ParseForm()
 	if err != nil {
-		errs.WebClientErr(w, "Error parsing form")
+		errs.ServerError(w, err)
 		return
 	}
 	form := &models.BookForm{}
 
 	err = models.DecodePostForm(r, &form)
 	if err != nil {
-		errs.WebClientErr(w, "Error decoding form")
+		errs.ServerError(w, err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func (bc *Controllers) EditBookPut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !form.Valid() {
-		data := templates.NewTemplateData(bc.session, r)
+		data := templates.New(bc.session, r)
 		data.Book = &book
 		data.Form = form
 		templates.Render(w, "edit_book", data)
@@ -108,7 +108,7 @@ func (bc *Controllers) EditBookPut(w http.ResponseWriter, r *http.Request) {
 		ReadDate:         form.ReadDate,
 	})
 	if err != nil {
-		errs.WebServerErr(w, "Error updating book")
+		errs.ServerError(w, err)
 		return
 	}
 	// rediret to the book details

@@ -1,9 +1,0 @@
-{{define "title"}}Create book{{end}}
-{{define "main"}}
-  <form method="POST" action="/create">
-    {{template "book_form" .}}
-    <button hx-include="[name='isbn']" hx-get="/fetchByIsbn" hx-target="body">get by isbn</button>
-    <input type="submit" value="Create" hx-post="/create" hx-target="main" hx-select="main" hx-swap="outerHTML" hx-push-url="true"/>
-  </form>
-{{end}}
-

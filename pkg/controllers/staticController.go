@@ -10,7 +10,7 @@ import (
 
 func (sc *Controllers) Home(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if !sc.session.Exists(r.Context(), "authenticatedUserID") {
-		data := templates.NewTemplateData(sc.session, r)
+		data := templates.New(sc.session, r)
 		templates.Render(w, "home_not_logged", data)
 		return
 	}
@@ -18,11 +18,11 @@ func (sc *Controllers) Home(w http.ResponseWriter, r *http.Request, ps httproute
 	offset := 0
 	books, err := sc.repos.GetBooks(r.Context(), 0, "", offset)
 	if err != nil {
-		errs.WebServerErr(w, "err getting books")
+		errs.ServerError(w, err)
 		return
 	}
 
-	data := templates.NewTemplateData(sc.session, r)
+	data := templates.New(sc.session, r)
 	data.Books = &books
 	templates.Render(w, "home", data)
 }
@@ -33,11 +33,11 @@ func (sc *Controllers) Profile(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Cache-Control", "no-store")
 		return
 	}
-	data := templates.NewTemplateData(sc.session, r)
+	data := templates.New(sc.session, r)
 	templates.Render(w, "profile", data)
 }
 
 func (sc *Controllers) NotFound(w http.ResponseWriter, r *http.Request) {
-	data := templates.NewTemplateData(sc.session, r)
+	data := templates.New(sc.session, r)
 	templates.Render(w, "404_page", data)
 }

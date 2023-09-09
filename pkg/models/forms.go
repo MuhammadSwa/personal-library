@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -13,14 +12,14 @@ import (
 type LoginForm struct {
 	Email               string `form:"email"`
 	Password            string `form:"password"`
-	validator.Validator `form:"-`
+	validator.Validator `form:"-"`
 }
 
 type RegisterForm struct {
 	Email               string `form:"email"`
 	Password            string `form:"password"`
 	Username            string `form:"username"`
-	validator.Validator `form:"-`
+	validator.Validator `form:"-"`
 }
 
 type BookForm struct {
@@ -38,7 +37,7 @@ type BookForm struct {
 	ReadStatus       bool      `form:"read_status"`
 	ReadDate         time.Time `form:"read_date"`
 	// database.CreateBookParams
-	validator.Validator `form:"-`
+	validator.Validator `form:"-"`
 }
 
 func DecodePostForm(r *http.Request, dst any) error {
@@ -68,7 +67,6 @@ func DecodePostForm(r *http.Request, dst any) error {
 			panic(err)
 		}
 		// For all other errors, we return them as normal.
-		fmt.Println(err)
 		return err
 	}
 	return nil
