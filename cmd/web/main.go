@@ -3,35 +3,33 @@ package main
 import (
 	_ "github.com/lib/pq"
 	"github.com/muhammadswa/personal-library/config"
-
-	// "github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"github.com/muhammadswa/personal-library/internal/logger"
 )
 
 // TODO: make people code review this
 
 func main() {
 
-	log.Info().Msg("Starting the app...")
-
-	log.Info().Msg("Initializing configuration...")
+	logger.Log.Info().Msg("Initializing configuration...")
 	cfg, err := config.InitConfig()
 	if err != nil {
-		log.Error().Err(err).Msg("Error initializing configuration")
-		// log.Fatalln(err)
+		logger.Log.Fatal().Err(err).Msg("Error initializing configuration")
 	}
 
-	log.Info().Msg("Initializing database...")
+	logger.Log.Info().Msg("Starting the app...")
+	//
+
+	logger.Log.Info().Msg("Initializing database...")
 	conn, err := InitDatabase(cfg.DSN)
 	if err != nil {
-		log.Error().Err(err).Msg("Error initializing configuration")
+		logger.Fatal(err, "Error initializing database")
 	}
 	defer conn.Close()
 
-	log.Info().Msg("Initializing http server...")
-	httpServer := InitHttpServer(conn, cfg.Port)
-	err = httpServer.Run()
+	logger.Log.Info().Msg("Initializing http server...")
+	err = InitHttpServer(conn, cfg.Port)
+	// err = httpServer.Run()
 	if err != nil {
-		log.Error().Err(err).Msg("Error initializing configuration")
+		logger.Fatal(err, "Error initializing http server")
 	}
 }

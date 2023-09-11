@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -15,14 +14,7 @@ import (
 	"github.com/muhammadswa/personal-library/pkg/repositories"
 )
 
-type httpServer struct {
-	controllers *controllers.Controllers
-	repos       *repositories.Repositories
-	router      *http.Handler
-	port        string
-}
-
-func InitHttpServer(conn *sql.DB, port string) *httpServer {
+func InitHttpServer(conn *sql.DB, port string) error {
 	dbQueries := database.New(conn)
 
 	// initialize a sessionManager
@@ -66,18 +58,6 @@ func InitHttpServer(conn *sql.DB, port string) *httpServer {
 
 	mainMiddleware := sessionManager.LoadAndSave(router)
 
-	return &httpServer{
-		controllers: controllers,
-		repos:       repos,
-		router:      &mainMiddleware,
-		port:        port,
-	}
-}
+	return http.ListenAndServe(port, mainMiddleware)
 
-func (hs *httpServer) Run() error {
-	err := http.ListenAndServe(hs.port, *hs.router)
-	if err != nil {
-		return fmt.Errorf("error starting server: %w", err)
-	}
-	return nil
 }
