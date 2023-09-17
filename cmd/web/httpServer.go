@@ -56,7 +56,7 @@ func InitHttpServer(conn *sql.DB, port string) error {
 	// router.Handler(http.MethodPost, "/fetchByIsbn", protectedRoutes.ThenFunc(controllers.CreateBookWithISBN))
 	router.Handler(http.MethodGet, "/profile", protectedRoutes.ThenFunc(controllers.Profile))
 
-	mainMiddleware := sessionManager.LoadAndSave(router)
+	mainMiddleware := alice.New(sessionManager.LoadAndSave, middleware.requestLogger).Then(router)
 
 	return http.ListenAndServe(port, mainMiddleware)
 

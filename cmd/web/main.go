@@ -9,15 +9,13 @@ import (
 // TODO: make people code review this
 
 func main() {
+	logger.Log.Info().Msg("Starting the app...")
 
 	logger.Log.Info().Msg("Initializing configuration...")
 	cfg, err := config.InitConfig()
 	if err != nil {
-		logger.Log.Fatal().Err(err).Msg("Error initializing configuration")
+		logger.Fatal(err, "Error initializing configuration")
 	}
-
-	logger.Log.Info().Msg("Starting the app...")
-	//
 
 	logger.Log.Info().Msg("Initializing database...")
 	conn, err := InitDatabase(cfg.DSN)
@@ -28,7 +26,6 @@ func main() {
 
 	logger.Log.Info().Msg("Initializing http server...")
 	err = InitHttpServer(conn, cfg.Port)
-	// err = httpServer.Run()
 	if err != nil {
 		logger.Fatal(err, "Error initializing http server")
 	}

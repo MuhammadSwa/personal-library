@@ -7,9 +7,10 @@ import (
 )
 
 type Config struct {
-	DSN  string
-	Port string
-	ENV  string
+	DSN      string
+	Port     string
+	ENV      string
+	LogLevel string
 }
 
 func InitConfig() (*Config, error) {
@@ -20,9 +21,12 @@ func InitConfig() (*Config, error) {
 	dbUrl := os.Getenv("DB_DSN")
 	port := os.Getenv("PORT")
 	env := os.Getenv("ENV")
+	logLevel := os.Getenv("LOG_LEVEL")
+
 	return &Config{
-		DSN:  dbUrl,
-		Port: port,
-		ENV:  env,
+		DSN:      dbUrl,
+		Port:     port,
+		ENV:      env,
+		LogLevel: logLevel,
 	}, nil
 }
